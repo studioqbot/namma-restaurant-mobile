@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Unbounded:wght@200..900&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+@layer utilities {
+  .border-mix {
+    border-style: dotted dashed solid double;
+  }
+}
+:root {
+  --background: #EEE1D1;
+  /* --foreground: #171717; */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* --background: #0a0a0a; */
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: "Instrument Sans", serif;
+}
+@media (width >= 1536px) {
+  .container {
+      max-width: 1300px;
+  }
+}
+
+/* OverWrite Style */
+.slick-slider div:focus-visible {
+  outline: none !important;
+}
+.header-conatiner {
+  transition: all ease .3s;
+}
+
+.sticky-header .header-conatiner{
+  transition: all ease .3s;
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  z-index: 99;
+  box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.15);
+
+}

@@ -1,0 +1,39 @@
+import axiosInstance from "@/utils/axiosConfig"
+import API_ENDPOINTS from "./apiPaths"
+// import { CatelogFilterBody } from "@/app/home/page";
+import { CatalogSearchBody, OrderCreateBody, OrderUpdateBodyAdd } from "@/constants/types";
+// import { OrderUpdateBody } from "@/app/cart/page";
+
+
+
+export const nammaSpecialItems = (body: any) => {
+    return axiosInstance.post(`${API_ENDPOINTS.catlogFilterItems}`, body);
+}
+
+export const catalogItems = (paramsData: { types: string }) => {
+    return axiosInstance.get(`${API_ENDPOINTS.catlogList}`, { params: paramsData });
+}
+
+export const orderCreateApi = (body: OrderCreateBody) => {
+    return axiosInstance.post(`${API_ENDPOINTS.order}`, body);
+}
+
+export const orderUpdateApi = (body: any | OrderUpdateBodyAdd, orderId: string) => {
+    return axiosInstance.put(`${API_ENDPOINTS.orderUpdate}/${orderId}`, body);
+}
+
+export const catalogItemsFilter = (body: { category_ids: string[] }) => {
+    return axiosInstance.post(`${API_ENDPOINTS.catlogFilterItems}`, body);
+}
+
+export const retrieveOrder = (orderId: string|unknown) => {
+    return axiosInstance.get(`${API_ENDPOINTS.orderRetrieve}/${orderId}`);
+}
+
+export const createPayment = (body: any) => {
+    return axiosInstance.post(`${API_ENDPOINTS.payment}`, body);
+}
+
+export const catalogSearchApi = (body: CatalogSearchBody) => {
+    return axiosInstance.post(`${API_ENDPOINTS.catalogSearch}`, body);
+}
