@@ -4,12 +4,76 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import GlobalContext from '@/constants/global-context';
+import dayjs from 'dayjs';
 
 function Header() {
 
   const router = useRouter();
-  const { cartItemCount, setIsOrderUpdate, isOrderUpdate, lineItems } = useContext(GlobalContext);
+  const { cartItemCount, setIsOrderUpdate, isOrderUpdate, lineItems, setIsCartOpen } = useContext(GlobalContext);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const operationalHours: { [key: string]: { open: string; close: string }[] } = {
+    Mon: [
+      { open: "11:30", close: "15:00" },
+      { open: "17:30", close: "21:30" },
+    ],
+    Tue: [], 
+    Wed: [
+      { open: "11:30", close: "15:00" },
+      { open: "17:30", close: "22:00" },
+    ],
+    Thu: [
+      { open: "10:30", close: "18:00" },
+      { open: "17:30", close: "22:00" },
+    ],
+    Fri: [
+      { open: "09:30", close: "15:00" },
+      { open: "17:30", close: "22:00" },
+    ],
+    Sat: [
+      { open: "11:30", close: "15:00" },
+      { open: "17:30", close: "22:00" },
+    ],
+    Sun: [
+      { open: "11:30", close: "15:00" },
+      { open: "17:30", close: "22:00" },
+    ],
+  };
+
+  useEffect(() => {
+    const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent);
+    if (!isMobileDevice) { 
+      window.location.href = 'https://namma-restaurant-web-q78v.vercel.app/';
+
+    }
+
+    const checkIfOpen = () => {
+      const now = dayjs();
+      const currentDay = now.format("ddd"); 
+      const currentTime = now.format("HH:mm"); 
+
+      const todayHours = operationalHours[currentDay] || [];
+
+      if (todayHours.length === 0) {
+        setIsCartOpen(false);
+        return;
+      }
+
+      const isOpenNow = todayHours.some(
+        ({ open, close }) => currentTime >= open && currentTime <= close
+      );
+
+      setIsCartOpen(isOpenNow);
+    };
+
+    checkIfOpen();
+
+    const interval = setInterval(checkIfOpen, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  
   
 
   useEffect(() => {
@@ -30,6 +94,8 @@ function Header() {
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
+
+  
 
   return (
     <header className='w-full py-[10px] header-container'>
@@ -88,7 +154,7 @@ function Header() {
             <Link href="/our-menu" onClick={toggleDrawer}>Our Menu</Link>
           </li>
           <li>
-            <Link href="/location" onClick={toggleDrawer}>Location</Link>
+          <Link href="https://www.google.com/maps?q=181+Ranch+Dr,+Milpitas+95035" target='_blank'>Location</Link>
           </li>
           <li>
             <Link href="/contact-us" onClick={toggleDrawer}>Contact Us</Link>

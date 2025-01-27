@@ -1,9 +1,13 @@
+
+'use client'
 import React from 'react';
 import ReviewCard from './reviewcarousel';
 import ImageSlider from './banner-slider';
+import { useRouter } from 'next/navigation';
 
 
 function Banner() {
+    const router = useRouter();
     return (
         <div className='w-full relative '>
             {/* <img src="/assets/images/banner-bg.svg" alt="banner-bg" className="w-full absolute top-[50px] z-[-1]" /> */}
@@ -26,7 +30,7 @@ function Banner() {
                         <div className='w-full'>
                         {/* <img src="/assets/images/hero-slider1.svg" alt="banner-bg" className="w-full" /> */}
                         <ImageSlider/>
-                        <button className="w-full bg-[#FFC300] px-[32px] py-[11px] rounded-[100px] text-[17px] font-bold text-[#A02621] relative my-[20px]">Order Now</button>
+                        <button className="w-full bg-[#FFC300] px-[32px] py-[11px] rounded-[100px] text-[17px] font-bold text-[#A02621] relative my-[20px]" onClick={() => router.push('/our-menu')}>Order Now</button>
                         </div>
                         <div className='w-full mb-[55px]'>
                             <div className='text-[18px] leading-[25px] text-[#A02621] font-bold font-unbounded text-center mb-[12px]'>What Our Customers <br/> Are Saying</div>

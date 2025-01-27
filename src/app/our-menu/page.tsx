@@ -1,10 +1,9 @@
 'use client';
 import Loader from '@/components/loder';
 import GlobalContext from '@/constants/global-context';
-import ModifierModal from '@/constants/modifier-modal';
-import { CatalogItemsType, CategoryDataType, LineItemsType, ModifierIds, OrderCreateBody, OrderDetailsType, OrderUpdateBodyAdd } from '@/constants/types';
+import { CatalogItemsType, CategoryDataType, LineItemsType, ModifierDataType, ModifierIds, ModifierType, OrderCreateBody, OrderDetailsType, OrderUpdateBodyAdd } from '@/constants/types';
 import { catalogItems, catalogSearchApi, orderCreateApi, orderUpdateApi } from '@/services/apiServices';
-import { getDataFromLocalStorage, isEmptyObj, setDataInLocalStorage } from '@/utils/genericUtilties';
+import { getDataFromLocalStorage, isEmptyObj, removeItemFrmLocalStorage, setDataInLocalStorage } from '@/utils/genericUtilties';
 import dayjs, { Dayjs } from 'dayjs';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 interface OurMenuItemsType {
@@ -14,22 +13,22 @@ interface OurMenuItemsType {
     setUpdateLineItem: React.Dispatch<React.SetStateAction<LineItemsType[]>>;
     updateLineItem: LineItemsType[];
     setIsItemAdded: React.Dispatch<React.SetStateAction<boolean>>;
-    modifierList: any[];
+    modifierList: ModifierDataType[] ;
     modifierIds: ModifierIds[];
     setModifierIds: React.Dispatch<React.SetStateAction<ModifierIds[]>>;
     setFieldToClear: React.Dispatch<React.SetStateAction<string[]>>;
 
 };
-const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsItemAdded, updateLineItem, modifierList, modifierIds, setModifierIds, setFieldToClear }: OurMenuItemsType) => {
+const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsItemAdded, updateLineItem, modifierList, setFieldToClear }: OurMenuItemsType) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [quantity, setQuantity] = useState(0);
-    const [modifierListData, setModifierListData] = useState([]);
-    const [selectedOption, setSelectedOption] = useState<string[]>([]);
+    const [modifierListData, setModifierListData] = useState<ModifierType[]|undefined>([]);
+    const [selectedOption, setSelectedOption] = useState<string>('');
 
 
 
     const [isAdded, setIsAdded] = useState(false);
-    const { setCartItemCount, cartItemCount, isOrderUpdate, orderDetails, setOrderDetails, setFieldToRemove } = useContext(GlobalContext);
+    const { setCartItemCount, cartItemCount, isOrderUpdate, orderDetails, setOrderDetails } = useContext(GlobalContext);
 
     const matchedItem = useMemo(() => {
         return orderDetails?.line_items?.find(
@@ -170,33 +169,35 @@ const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsI
         }
     };
 
+
     const handleCheckboxChange = (modifierName: string, modifierId: string) => {
-
-
-        if (selectedOption.includes(modifierName)) {
-            setSelectedOption(selectedOption.filter((item) => item !== modifierName));
-
-        } else {
-            setSelectedOption([...selectedOption, modifierName]);
-
-            setLineItems((prevData: any) =>
-                prevData?.map((item: any) => {
-                    const existingModifiers = item?.modifiers || [];
-                    const isDuplicate = existingModifiers.some(
-                        (modifier: any) => modifier.catalog_object_id === modifierId
-                    );
-                    return {
-                        ...item,
-                        modifiers: isDuplicate
-                            ? existingModifiers
-                            : [...existingModifiers, { catalog_object_id: modifierId }],
-                    };
-                })
-            );
+        setSelectedOption(modifierName);
 
 
 
+        setLineItems((prevData: LineItemsType[]) => {
+            const addModifier = prevData?.find((item) => item.catalog_object_id === data?.item_data?.variations[0]?.id);
+            if (addModifier) {
+                addModifier.modifiers = [{ catalog_object_id: modifierId }]
+            }
+            return prevData
         }
+
+        );
+
+        if (isOrderUpdate && isOrderUpdate !== 'create') {
+            setUpdateLineItem((prevData: LineItemsType[]) => {
+                const addModifier = prevData?.find((item) => item.catalog_object_id === data?.item_data?.variations[0]?.id);
+                if (addModifier) {
+                    addModifier.modifiers = [{ catalog_object_id: modifierId }]
+                }
+                return prevData
+            }
+
+            );
+        }
+
+
     };
 
 
@@ -246,13 +247,13 @@ const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsI
                         >
                             <div className="w-full flex flex-col items-start justify-center">
                                 <h2 className="text-lg font-semibold text-gray-800 mb-[10px]">Customization</h2>
-                                {modifierListData && modifierListData?.length && modifierListData.map((modifier: any) => (
+                                {modifierListData && modifierListData?.length && modifierListData.map((modifier: ModifierType) => (
                                     <div
                                         key={modifier?.id}
                                         className="flex items-center justify-between w-full py-[10px] relative"
                                     >
                                         <span className='absolute w-full border-b border-dotted border-[#222A4A] z-[1]' />
-                                        <span className=" bg-white min-w-[100px] relative z-[2]">{modifier?.modifier_data?.name}</span>
+                                        <span className="bg-white min-w-[100px] relative z-[2] text-left">{modifier?.modifier_data?.name}</span>
                                         <div className="bg-white relative z-[2] flex pl-[10px]">
 
                                             <input
@@ -260,7 +261,7 @@ const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsI
                                                 id={modifier?.modifier_data?.name}
                                                 name="customization"
                                                 value={modifier?.modifier_data?.name}
-                                                checked={selectedOption.includes(modifier?.modifier_data?.name)}
+                                                checked={selectedOption === modifier?.modifier_data?.name}
                                                 onChange={() => handleCheckboxChange(modifier?.modifier_data?.name, modifier?.id)}
                                                 className="hidden peer"
                                             />
@@ -273,13 +274,15 @@ const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsI
                                             </label>
                                         </div>
 
-                                        {/* <span className=' bg-white relative z-[2] flex pl-[10px]'>
-                                
-                                </span> */}
-
                                     </div>
                                 ))}
-
+                                <div className='w-full flex justify-end mt-4' onClick={() => {
+                                    if (selectedOption) {
+                                        setIsModalOpen(false)
+                                    }
+                                }}>
+                                    <button className='bg-[#FFC300] px-[32px] py-[5px] rounded-[100px] text-[14px] font-bold text-[#A02621] relative'>Confirm</button>
+                                </div>
 
                             </div>
                         </div>
@@ -295,9 +298,9 @@ const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsI
 const OurMenu = () => {
 
     const { setCatalogCategory, setCatalogCategoryAndItem, catalogCategory, isOrderUpdate,
-        catalogCategoryAndItem, lineItems, updateLineItem, setLineItems, setUpdateLineItem, orderDetails, setIsOrdered,isOrdered,
-        setIsOrderUpdate, setOrderDetails, setFieldToRemove, fieldToRemove, catalogCategoryTab, setCatalogCategoryTab } = useContext(GlobalContext);
-    const [modifierList, setMofierList] = useState<any[]>([]);
+        catalogCategoryAndItem, lineItems, updateLineItem, setLineItems, setUpdateLineItem, orderDetails, setIsOrdered, isOrdered,
+        setIsOrderUpdate, setOrderDetails, setFieldToRemove, fieldToRemove, catalogCategoryTab, setCatalogCategoryTab,  setGlobalLoading } = useContext(GlobalContext);
+    const [modifierList, setMofierList] = useState<ModifierDataType[]>([]);
     const [isItemAdded, setIsItemAdded] = useState(false);
     const [loading, setLoading] = useState(false);
     const [modifierIds, setModifierIds] = useState<ModifierIds[]>([]);
@@ -364,7 +367,7 @@ const OurMenu = () => {
     const getOurMenuDatasFromLocal = () => {
         const itemAndCategoryData: CatalogItemsType[] | null = getDataFromLocalStorage('CatalogItemsData');
         const categoryData: CategoryDataType[] | null = getDataFromLocalStorage('CatalogCategoryData');
-        const modifierData: any[] | null = getDataFromLocalStorage('ModifierListData');
+        const modifierData: ModifierDataType[] | null = getDataFromLocalStorage('ModifierListData');
 
 
         if (itemAndCategoryData && itemAndCategoryData?.length) {
@@ -412,7 +415,7 @@ const OurMenu = () => {
                 setLoading(false)
                 if (response?.status === 200 && response?.data?.objects) {
                     setCatalogCategoryAndItem(response?.data?.objects);
-                    const categoryIds = response?.data?.objects?.map((data: any) => data?.item_data?.category_id);
+                    const categoryIds = response?.data?.objects?.map((data :CatalogItemsType) => data?.item_data?.category_id);
 
 
                     if (categoryIds?.length) {
@@ -439,7 +442,7 @@ const OurMenu = () => {
     }
 
     const orderCreate = async () => {
-
+        setGlobalLoading(true)
         const body: OrderCreateBody = {
             order: {
                 location_id: 'LC1BQTNRBNPKQ',
@@ -456,7 +459,7 @@ const OurMenu = () => {
         }
         try {
             const response = await orderCreateApi(body);
-
+            setGlobalLoading(false)
             if (response?.status === 200) {
                 setIsOrderUpdate('created');
                 setOrderDetails(response?.data?.order);
@@ -467,12 +470,13 @@ const OurMenu = () => {
             };
 
         } catch (error) {
+            setGlobalLoading(false)
             console.log('Error', error);
         };
     };
 
     const orderUpdate = async () => {
-
+        setGlobalLoading(true)
         const body: OrderUpdateBodyAdd = {
             fields_to_clear: fieldToRemove,
             order: {
@@ -488,7 +492,7 @@ const OurMenu = () => {
         }
         try {
             const response = await orderUpdateApi(body, orderDetails?.id)
-
+            setGlobalLoading(false)
             if (response?.status === 200) {
 
                 setOrderDetails(response?.data?.order);
@@ -498,6 +502,7 @@ const OurMenu = () => {
             }
 
         } catch (error) {
+            setGlobalLoading(false)
             console.log('Error', error);
         }
     };
@@ -532,6 +537,12 @@ const OurMenu = () => {
 
     }, [isOrderUpdate]);
 
+    
+    useEffect(() => {
+        if (lineItems?.length === 0) {
+            removeItemFrmLocalStorage(['OrderId'])
+        }
+    }, []);
 
     const [isMenuModalOpen, setIsMenuModalOpen] = useState(false);
     const openMenuModal = () => setIsMenuModalOpen(true);

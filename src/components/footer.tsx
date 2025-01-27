@@ -29,13 +29,13 @@ function Footer() {
                   rel="noopener noreferrer">
                   181 Ranch Dr, Milpitas 95035
                 </a>
-                <a
+                <Link
                   href="mailto:reachusnamma@gmail.com"
                   className="text-[14px] text-[#222A4A]"
                 >
                   reachusnamma@gmail.com
-                </a>
-                <span>408-649-3417 & 408-649-3418</span>
+                </Link>
+                <span><Link href="tel:+14086493417">408-649-3417</Link> & <Link href="tel:+14086493418">408-649-3418</Link></span>
               </div>
             </div>
             <div className='flex flex-col items-center text-[14px] text-[#222A4A] text-center'>

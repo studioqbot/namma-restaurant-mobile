@@ -1,14 +1,17 @@
 'use client'
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Image from "next/image";
 import GlobalContext from '@/constants/global-context';
-import { Errors, LineItemsType, LineItemType, OrderDetailsType, OrderDetailsValue, YourDetailsType } from '@/constants/types';
-import { createPayment, orderUpdateApi, retrieveOrder } from '@/services/apiServices';
+import { Errors, LineItemsType, LineItemType, ModifierDataType, ModifierType, OrderDetailsType, OrderDetailsValue, OrderUpdateBodyAdd, TokenData, YourDetailsType } from '@/constants/types';
+import { catalogItems, createPayment, getCatalogObject, orderUpdateApi, retrieveOrder } from '@/services/apiServices';
 import Loader from '@/components/loder';
 import { PaymentForm, CreditCard } from 'react-square-web-payments-sdk';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { getDataFromLocalStorage } from '@/utils/genericUtilties';
+import { getDataFromLocalStorage, setDataInLocalStorage } from '@/utils/genericUtilties';
+import LoadingGif from '../../../public/assets/images/slow-cooker-loader.gif';
+
+type ButtonComponent = React.ComponentType<{ children: React.ReactNode, style: React.CSSProperties }>;
 
 type CartProps = {
     // getOrderDetails: () => void;
@@ -21,9 +24,11 @@ type CartProps = {
     // setUpdateLineItem: React.Dispatch<React.SetStateAction<LineItemsType[]>>;
     // updateLineItem: LineItemsType[];
     setIsOrderUpdate: React.Dispatch<React.SetStateAction<string>>;
-    orderUpdate: (count: string, objectId: string, uid: string) => Promise<void>;
+    orderUpdate: (count: string, objectId: string, uid: string, modifierId: string, modifierUid: string) => Promise<void>;
     // setAmount: React.Dispatch<React.SetStateAction<string | number>>;
     // setMoneyDetails: any;
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+    modifierList: ModifierDataType[] | undefined;
 
 }
 
@@ -45,9 +50,10 @@ const button = {
 function CartScreen() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { orderDetails, setCartItemCount, cartItemCount, setLineItems, setOrderDetails, setIsOrderUpdate,
-        setAmount, amount, setFieldToRemove, setUpdateLineItem,isOrdered } = useContext(GlobalContext)
+        setGlobalLoading,   setAmount, setFieldToRemove, setUpdateLineItem, isOrdered, globalLoading } = useContext(GlobalContext)
     const [loading, setLoading] = useState<boolean>(false);
     const [yourDetails, setYourDetails] = useState<YourDetailsType>();
+    const [modifierList, setMofierList] = useState<ModifierDataType[]>([]);
     const [errors, setErrors] = useState<Errors>({
         name: '',
         mobile: ''
@@ -58,7 +64,7 @@ function CartScreen() {
 
 
 
-    const handleSubmitPayment = async (tokenData: any) => {
+    const handleSubmitPayment = async (tokenData: TokenData) => {
 
         const errorData = { ...errors } as Errors;
         if (!yourDetails?.name) {
@@ -145,27 +151,31 @@ function CartScreen() {
         })
     }
 
-    const orderUpdate = async (count: string, objectId: string, uid: string) => {
+    const orderUpdate = async (count: string, objectId: string, uid: string, modifierId: string, modifierUid: string) => {
         setLoading(true)
+        const modifier = modifierId ? [{ catalog_object_id: modifierId }] : [];
+        const clear = modifierUid ? [`line_items[${uid}].modifiers[${modifierUid}]`] : [];
         try {
-            let body;
+            let body: OrderUpdateBodyAdd;
             if (count === '0') {
                 body = {
                     fields_to_clear: [`line_items[${uid}]`],
                     order: {
-                        location_id: 'LC1BQTNRBNPKQ',
+                        location_id: process.env.NEXT_PUBLIC_LOCATION_ID,
                         version: orderDetails?.version
                     }
                 };
             } else {
                 body = {
+                    fields_to_clear: clear,
                     order: {
-                        location_id: "LC1BQTNRBNPKQ",
+                        location_id: process.env.NEXT_PUBLIC_LOCATION_ID,
                         line_items: [
                             {
                                 quantity: count,
                                 uid: uid,
-                                catalog_object_id: objectId
+                                catalog_object_id: objectId,
+                                modifiers: modifier
                             }
                         ],
                         pricing_options: {
@@ -184,9 +194,10 @@ function CartScreen() {
             if (response?.status === 200) {
                 setOrderDetails(response?.data?.order);
                 setLineItems(response?.data?.order?.line_items || []);
-                const totalBasePrice = response?.data?.order?.line_items?.reduce((sum: number, item: LineItemType) => sum + (item.base_price_money.amount * parseInt(item?.quantity)), 0);
-                setAmount(totalBasePrice);
                 setLoading(false);
+                if (!globalLoading && !response?.data?.order?.line_items) {
+                    router.push('/our-menu')
+                }
             }
         } catch (error) {
             console.log('Error', error);
@@ -194,32 +205,53 @@ function CartScreen() {
         }
     };
 
-    const fetchOrderDetails = async (orderId : string|unknown) => {
+    const fetchOrderDetails = async (orderId: string | unknown) => {
+        setGlobalLoading(true)
         try {
-           
-            const response = await retrieveOrder(orderId)
+
+            const response = await retrieveOrder(orderId);
+            setGlobalLoading(false)
             if (response?.status === 200 && response?.data?.order) {
                 setOrderDetails(response?.data?.order);
                 setLineItems(response?.data?.order?.line_items || []);
                 setIsOrderUpdate('created');
-                const totalQuantity = response?.data?.order?.line_items?.reduce((sum: any, item: any) => sum + parseInt(item.quantity, 10), 0);
+                const totalQuantity = response?.data?.order?.line_items?.reduce((sum: number, item: LineItemType) => sum + parseInt(item.quantity, 10), 0);
                 setCartItemCount(totalQuantity)
             }
         } catch (error) {
+            setGlobalLoading(false)
             console.log(error);
 
         }
-    }
+    };
+
+    const getModifierListData = async () => {
+        try {
+            const params = { types: 'MODIFIER_LIST' }
+            const response = await catalogItems(params);
+            if (response?.status === 200) {
+                setDataInLocalStorage('ModifierListData', response?.data?.objects);
+                setMofierList(response?.data?.objects);
+            }
+
+        } catch (error) {
+            console.log('Error', error);
+        }
+    };
 
     useEffect(() => {
         const orderId = getDataFromLocalStorage('OrderId');
         console.log('orderId', orderId);
-        
+
         if (orderDetails.id || orderId) {
             fetchOrderDetails(orderDetails.id || orderId)
         }
 
-    }, [isOrdered])
+    }, [isOrdered]);
+
+    useEffect(() => {
+        getModifierListData()
+    }, [])
 
     return (
         <>
@@ -249,10 +281,19 @@ function CartScreen() {
                                         // updateLineItem={updateLineItem}
                                         setIsOrderUpdate={setIsOrderUpdate}
                                         orderUpdate={orderUpdate}
+                                        setLoading={setLoading}
+                                        modifierList={modifierList}
                                     // setAmount={setAmount}
                                     // setMoneyDetails={setMoneyDetails} 
                                     />
                                 ))
+                            }
+
+                            {globalLoading &&
+
+                                <div className="w-full py-[20px] rounded-full p-5 flex justify-center">
+                                    <Image className='h-[100px] w-[100px] ' src={LoadingGif} alt="Loading..." />
+                                </div>
                             }
                             {/* Add More Items Button */}
                             <button className="w-full mt-6 py-[13px] bg-[#FFC300] text-[#A02621] text-[14px] font-bold rounded-[100px] hover:bg-amber-500 transition-colors" onClick={() => router.push('/our-menu')}>
@@ -291,25 +332,25 @@ function CartScreen() {
                                         <div className="flex items-center justify-between py-2 relative">
                                             <span className='absolute w-full border-b border-dotted border-[#222A4A] z-0' />
                                             <span className="bg-[#fff] text-[14px] text-[#222A4A] pr-[25px] relative z-1">Amount</span>
-                                            <span className="bg-[#fff] text-[14px] text-[#222A4A] relative z-1 min-w-[71px] text-right">${amount}</span>
+                                            <span className="bg-[#fff] text-[14px] text-[#222A4A] relative z-1 min-w-[71px] text-right">${parseFloat((((orderDetails?.total_money?.amount / 100) + (orderDetails?.total_discount_money?.amount / 100)) - (orderDetails?.total_tax_money?.amount / 100)).toFixed(2))}</span>
                                         </div>
 
                                         <div className="flex items-center justify-between py-2 relative">
                                             <span className='absolute w-full border-b border-dotted border-[#222A4A] z-0' />
                                             <span className="bg-[#fff] text-[14px] text-[#222A4A] pr-[25px] relative z-1">Tax</span>
-                                            <span className="bg-[#fff] text-[14px] text-[#222A4A] relative z-1 min-w-[71px] text-right">${orderDetails?.total_tax_money?.amount}</span>
+                                            <span className="bg-[#fff] text-[14px] text-[#222A4A] relative z-1 min-w-[71px] text-right">${orderDetails?.total_tax_money?.amount / 100 || 0}</span>
                                         </div>
 
                                         <div className="flex items-center justify-between py-2 relative">
                                             <span className='absolute w-full border-b border-dotted border-[#222A4A] z-0' />
                                             <span className="bg-[#fff] text-[14px] text-[#222A4A] pr-[25px] relative z-1">Discount</span>
-                                            <span className="bg-[#fff] text-[14px] text-[#222A4A] relative z-1 min-w-[71px] text-right">${orderDetails?.total_discount_money?.amount}</span>
+                                            <span className="bg-[#fff] text-[14px] text-[#222A4A] relative z-1 min-w-[71px] text-right">${orderDetails?.total_discount_money?.amount / 100 || 0}</span>
                                         </div>
 
                                         <div className="flex items-center justify-between py-2 relative">
                                             <span className='absolute w-full border-b border-dotted border-[#222A4A] z-0' />
                                             <span className="bg-[#fff] text-[16px] font-semibold text-[#222A4A] pr-[25px] relative z-1">Total Amount</span>
-                                            <span className="bg-[#fff] text-[16px] font-semibold text-[#222A4A] relative z-1 min-w-[71px] text-right">${orderDetails?.total_money?.amount}</span>
+                                            <span className="bg-[#fff] text-[16px] font-semibold text-[#222A4A] relative z-1 min-w-[71px] text-right">${orderDetails?.total_money?.amount / 100 || 0}</span>
                                         </div>
 
 
@@ -372,14 +413,14 @@ function CartScreen() {
                                 <PaymentForm
 
                                     applicationId="sandbox-sq0idb-CdrXsMRXd9_VI-MO3QiAHQ"
-                                    cardTokenizeResponseReceived={(token: any) => {
+                                    cardTokenizeResponseReceived={(token: TokenData) => {
                                         handleSubmitPayment(token)
                                     }}
 
                                     locationId="LC1BQTNRBNPKQ"
                                 >
-                                    <CreditCard render={(Button: any) => <Button style={button} >
-                                        <span>Securely Pay ${2328.50}</span>
+                                    <CreditCard render={(Button: ButtonComponent) => <Button style={button} >
+                                        <span>Securely Pay ${orderDetails?.total_money?.amount / 100}</span>
                                     </Button>} />
                                 </PaymentForm>
                             </div>
@@ -412,14 +453,16 @@ function CartScreen() {
                                 <br />
                                 Your Order!
                             </h1>
-
+                            <h3 className="text-[#28272C] text-[11px] font-semibold leading-[20px] font-unbounded mb-[11px]">
+                                Order ID: {orderDetails?.id}
+                            </h3>
                             {/* Success Message */}
                             <div className="mb-6">
                                 <p className="text-[14px] text-[#A02621] leading-[21px] font-semibold">
                                     Your order has been placed successfully!🎉
                                 </p>
                                 <p className="text-[14px] text-[#000000] leading-[21px] ">
-                                    We're preparing your meal with the freshest ingredients and
+                                    We{"'"}re preparing your meal with the freshest ingredients and
                                     authentic flavors to ensure you enjoy a truly satisfying experience.
                                 </p>
                             </div>
@@ -440,7 +483,7 @@ function CartScreen() {
                                 </p>
                             </div>
 
-                            <p className="text-[14px] text-[#000000] leading-[21px] mt-[22px]">We can't wait to serve you again!</p>
+                            <p className="text-[14px] text-[#000000] leading-[21px] mt-[22px]">We can{"'"}t wait to serve you again!</p>
 
                             {/* Continue Button */}
                             <button className="w-[164px] py-[12px] border border-[#A02621] text-[12px] text-[#A02621] font-medium rounded-[100px] mt-[22px]" onClick={() => {
@@ -469,13 +512,15 @@ function CartScreen() {
 
 
 const CartItem = (props: CartProps) => {
-    const { lineItem, setCartItemCount, cartItemCount, orderUpdate
+    const { lineItem, setCartItemCount, cartItemCount, orderUpdate, setLoading, modifierList
     } = props;
 
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [quantity, setQuantity] = useState(parseInt(lineItem?.quantity) || 0);
     const [isItemAdded, setIsItemAdded] = useState(false);
-
-
+    const [modifierListData, setModifierListData] = useState<ModifierType[]>([]);
+    const [selectedOption, setSelectedOption] = useState<string>('');
+    const [modifierId, setModifierId] = useState<string>('');
 
     const handleCountIncrement = async (quantityVal: number) => {
 
@@ -484,7 +529,7 @@ const CartItem = (props: CartProps) => {
         setQuantity(countIncrease);
         setCartItemCount(cartItemCount + 1);
         const updateCount = String(countIncrease)
-        orderUpdate(updateCount, lineItem?.catalog_object_id, lineItem?.uid)
+        orderUpdate(updateCount, lineItem?.catalog_object_id, lineItem?.uid, '', '')
     }
 
     const handleQuantityDecrement = (quantityVal: number) => {
@@ -496,10 +541,10 @@ const CartItem = (props: CartProps) => {
         setQuantity(countIncrease);
 
         if (countIncrease < 1) {
-            orderUpdate('0', lineItem?.catalog_object_id, lineItem?.uid)
+            orderUpdate('0', lineItem?.catalog_object_id, lineItem?.uid, '', '')
         } else {
             const updateCount = String(countIncrease)
-            orderUpdate(updateCount, lineItem?.catalog_object_id, lineItem?.uid)
+            orderUpdate(updateCount, lineItem?.catalog_object_id, lineItem?.uid, '', '');
 
 
         };
@@ -507,12 +552,54 @@ const CartItem = (props: CartProps) => {
 
     };
 
+    const changeModifier = async () => {
+        if (lineItem?.catalog_object_id) {
+
+            setLoading(true)
+
+            try {
+
+                const response = await getCatalogObject(lineItem?.modifiers[0]?.catalog_object_id);
+                setLoading(false)
+                if (response?.status === 200) {
+                    setIsModalOpen(true);
+                    const modifierData = modifierList?.find((modifier) => modifier?.id === response?.data?.object?.modifier_data?.modifier_list_id)
+                    console.log('modifierData', modifierData, response?.data?.object?.modifier_data?.modifier_list_id);
+
+                    setModifierListData(modifierData?.modifier_list_data?.modifiers || [])
+                }
+            } catch (error) {
+                setLoading(false)
+                console.log(error);
+
+            }
+
+
+
+
+        }
+    };
+    const handleCheckboxChange = (modifierName: string, modifierId: string, modifier: { id: string }) => {
+        setSelectedOption(modifierName);
+        // lineItem?.modifiers[0]?.catalog_object_id === modifierId
+        if (modifier?.id !== lineItem?.modifiers[0]?.catalog_object_id) {
+            setModifierId(modifierId)
+
+        } else {
+            setModifierId('')
+        }
+
+
+
+    };
+
     return <div className='w-full flex items-center justify-between mb-[28px] last:mb-0'>
         <h3 className="text-[#222A4A] text-[14px] font-medium">
-            {lineItem?.name}
+            {lineItem?.name}&nbsp;&nbsp;
+            {lineItem?.modifiers?.length > 0 && <button className="text-[#A07E21] text-[14px] font-normal" onClick={changeModifier}> (Change)</button>}
         </h3>
         <div className='flex flex-col items-center ml-3'>
-            <div className="text-[#222A4A] text-[15px] font-semibold text-center">${lineItem?.base_price_money?.amount * (isItemAdded ? quantity : parseInt(lineItem?.quantity))}</div>
+            <div className="text-[#222A4A] text-[15px] font-semibold text-center">${(lineItem?.base_price_money?.amount / 100 * (isItemAdded ? quantity : parseInt(lineItem?.quantity))).toFixed(2)}</div>
             <div className="flex items-center w-[100px] mx-auto border border-[#A02621] rounded-[100px] overflow-hidden text-[#A02621] text-[12px]">
                 <button
                     onClick={() => {
@@ -535,32 +622,67 @@ const CartItem = (props: CartProps) => {
                 </button>
             </div>
         </div>
-    </div>
-    {/* <div className='w-full flex items-center justify-between'>
-            <h3 className="text-[#222A4A] text-[14px] font-medium">
-                Nei Milagu Kozhi Sukka - Andhra <span className="text-[#A07E21] text-[14px] font-normal">(Change)</span>
-            </h3>
-            <div className='flex flex-col items-center ml-3'>
-                <div className="text-[#222A4A] text-[15px] font-semibold text-center">$12.99</div>
-                <div className="flex items-center w-[100px] mx-auto border border-[#A02621] rounded-[100px] overflow-hidden text-[#A02621] text-[12px]">
-                    <button
-                        // onClick={() => updateQuantity(name, -1)}
-                        className="px-3 py-1 text-red-600 hover:bg-gray-100"
-                    >
-                        -
-                    </button>
-                    <span className="px-3 py-1 text-red-600">
-                        1
-                    </span>
-                    <button
-                        // onClick={() => updateQuantity(name, 1)}
-                        className="px-3 py-1 text-red-600 hover:bg-gray-100"
-                    >
-                        +
-                    </button>
+        {
+            isModalOpen && <div
+                className="fixed inset-0 bg-black bg-opacity-50 flex items-end justify-center z-[99999] pb-[80px] px-[20px] "
+                onClick={() => setIsModalOpen(false)}
+            >
+                <div
+                    className="bg-white rounded-lg w-full p-[30px] relative"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <div className="w-full flex flex-col items-start justify-center">
+                        <h2 className="text-lg font-semibold text-gray-800 mb-[10px]">Customization</h2>
+                        {modifierListData && modifierListData?.length && modifierListData.map((modifier: ModifierType) => (
+                            <div
+                                key={modifier?.id}
+                                className="flex items-center justify-between w-full py-[10px] relative"
+                            >
+                                <span className='absolute w-full border-b border-dotted border-[#222A4A] z-[1]' />
+                                <span className=" bg-white min-w-[100px] relative z-[2]">{modifier?.modifier_data?.name}</span>
+                                <div className="bg-white relative z-[2] flex pl-[10px]">
+
+                                    <input
+                                        type="checkbox"
+                                        id={modifier?.modifier_data?.name}
+                                        name="customization"
+                                        value={modifier?.modifier_data?.name}
+                                        checked={(selectedOption || lineItem?.modifiers[0]?.name) === modifier?.modifier_data?.name}
+                                        onChange={() => handleCheckboxChange(modifier?.modifier_data?.name, modifier?.id, modifier)}
+                                        className="hidden peer"
+                                    />
+
+                                    <label
+                                        htmlFor={modifier?.modifier_data?.name}
+                                        className="w-5 h-5 border border-[#222A4A] rounded-full flex items-center justify-center cursor-pointer peer-checked:border-[#A02621] peer-checked:bg-[#A02621]"
+                                    >
+                                        <div className="w-2.5 h-2.5 bg-white rounded-full peer-checked:bg-[#A02621]"></div>
+                                    </label>
+                                </div>
+
+                                {/* <span className=' bg-white relative z-[2] flex pl-[10px]'>
+                    
+                    </span> */}
+
+                            </div>
+                        ))}
+
+                        <div className='w-full flex justify-end mt-4' onClick={() => {
+                            setIsModalOpen(false);
+                            if (modifierId) {
+                                orderUpdate(String(quantity), lineItem?.catalog_object_id, lineItem?.uid, modifierId, lineItem?.modifiers[0]?.uid)
+                            }
+                        }}>
+                            <button className='bg-[#FFC300] px-[32px] py-[5px] rounded-[100px] text-[14px] font-bold text-[#A02621] relative'>Confirm</button>
+                        </div>
+
+
+                    </div>
                 </div>
             </div>
-        </div> */}
+        }
+    </div>
+
 
 }
 

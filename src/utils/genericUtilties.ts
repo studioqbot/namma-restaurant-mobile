@@ -18,7 +18,7 @@ export const isEmptyObj = (obj: unknown): boolean => {
       try {
         return JSON.parse(storedData) as T;
       } catch (error) {
-        console.error(
+        console.log(
           `Error parsing localStorage data for key '${key}': ${(error as Error).message}`
         );
       }

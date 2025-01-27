@@ -37,7 +37,7 @@ export default function ReviewCard() {
             {/* Text Content */}
             <div className="py-4 px-5">
               <p className="text-[#222A4A] text-[13px] leading-[21px] mb-3">
-                The Vanjaram Fish Fry at Namma Restaurant is simply outstanding! Perfectly spiced, crisp on the outside, and tender inside—every bite is a burst of Karaikudi goodness. It's my absolute favorite!
+                The Vanjaram Fish Fry at Namma Restaurant is simply outstanding! Perfectly spiced, crisp on the outside, and tender inside—every bite is a burst of Karaikudi goodness. It{"'"}s my absolute favorite!
               </p>
               <div className="flex items-center space-x-2">
                 <Image

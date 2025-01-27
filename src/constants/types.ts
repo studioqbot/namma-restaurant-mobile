@@ -8,7 +8,9 @@ export interface NammaSpecialItems {
         is_taxable: boolean;
         category_id: string;
         tax_ids: string[]
-        modifier_list_info: any[];
+        modifier_list_info: [{
+            modifier_list_id: string
+        }];
         image_ids?: string[] | undefined;
         variations: [
             {
@@ -147,29 +149,38 @@ export const OrderDetailsValue: OrderDetailsType = {
 //     modifiers? : ModifierIds[]
 // }
 export interface LineItemsType {
-    uid?: string;
-    catalog_object_id: string;
     quantity: string;
-    name: string;
+    catalog_object_id: string;
+    uid?: string;
+    name?: string;
     variation_name?: string;
-    base_price_money?: {
-        amount: number;
-    };
-    modifiers?: ModifierType[];
 
+    total_money?: {
+        amount: number
+    }
+    base_price_money?: {
+        amount: number
+    }
+    modifiers?: ModifierIds[];
     total_tax_money?: {
         amount: number;
     };
     total_discount_money?: {
         amount: number;
     };
-    total_money?: {
-        amount: number;
-    };
-
-
 }
-export interface ModifierType {
+
+
+
+export interface ModifierDataType {
+    id: string;
+    modifier_list_data: {
+        modifiers: ModifierType[];
+    }
+}
+
+export interface ModifierType  {
+    id: string;
     uid: string,
     base_price_money: {
         amount: 50,
@@ -179,7 +190,14 @@ export interface ModifierType {
     },
     name: string,
     catalog_object_id: string,
-    quantity: string
+    quantity: string;
+    modifier_data: {
+        name: string
+    }
+}
+export interface ModifierBody {
+ 
+    catalog_object_id: string,
 }
 
 export interface UpdateLineItems {
@@ -325,8 +343,8 @@ export const CatalogItemsValue = {
 
 export type OrderCreateBody = {
     order: {
-        location_id: string,
-        line_items: LineItemsType[],
+        location_id: string|undefined;
+        line_items: LineItemsType[];
         pricing_options?: {
             auto_apply_taxes: boolean;
             auto_apply_discounts: boolean;
@@ -334,6 +352,7 @@ export type OrderCreateBody = {
         modifiers?: ModifierIds[]
     }
 }
+
 
 export type CatalogSearchBody = {
     query: {
@@ -347,11 +366,12 @@ export type CatalogSearchBody = {
 export type OrderUpdateBodyAdd = {
     fields_to_clear?: string[];
     order: {
-        location_id: string,
-        line_items: LineItemsType[],
+        location_id: string|undefined;
+        line_items?: LineItemsType[];
+
         pricing_options?: {
-            auto_apply_taxes: boolean;
-            auto_apply_discounts: boolean;
+            auto_apply_taxes?: boolean;
+            auto_apply_discounts?: boolean;
         };
         version: number
     }
@@ -377,6 +397,11 @@ export type LineItemType = {
     variation_total_price_money: Money;
     item_type: string;
     total_service_charge_money: Money;
+    modifiers: {
+        uid: string;
+        name: string;
+        catalog_object_id: string;
+    }[];
 };
 
 export type YourDetailsType = {
@@ -392,4 +417,38 @@ export type Errors = {
     name: string;
     email?: string
 
+}
+
+
+export interface TokenData {
+    details: {
+        billing: {
+            postalCode: string;
+        },
+        card: {
+            brand: string;
+            expMonth: number;
+            expYear: number
+            last4: number;
+        },
+    },
+    status: string;
+    token: string;
+}
+
+export interface PaymentBodyType {
+    source_id: string;
+    idempotency_key: string;
+    location_id: string|undefined;
+    amount_money: {
+        amount: number;
+        currency: string;
+    },
+    order_id: string;
+    billing_address: {
+        first_name?: string;
+    },
+    buyer_email_address?: string;
+    buyer_phone_number: string;
+    note: string;
 }

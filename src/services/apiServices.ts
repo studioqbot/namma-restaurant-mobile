@@ -1,12 +1,13 @@
 import axiosInstance from "@/utils/axiosConfig"
 import API_ENDPOINTS from "./apiPaths"
 // import { CatelogFilterBody } from "@/app/home/page";
-import { CatalogSearchBody, OrderCreateBody, OrderUpdateBodyAdd } from "@/constants/types";
+import { CatalogSearchBody, OrderCreateBody, OrderUpdateBodyAdd, PaymentBodyType } from "@/constants/types";
+import { CatelogFilterBody } from "@/app/home/components/nammaSpecial";
 // import { OrderUpdateBody } from "@/app/cart/page";
 
 
 
-export const nammaSpecialItems = (body: any) => {
+export const nammaSpecialItems = (body: CatelogFilterBody) => {
     return axiosInstance.post(`${API_ENDPOINTS.catlogFilterItems}`, body);
 }
 
@@ -18,7 +19,7 @@ export const orderCreateApi = (body: OrderCreateBody) => {
     return axiosInstance.post(`${API_ENDPOINTS.order}`, body);
 }
 
-export const orderUpdateApi = (body: any | OrderUpdateBodyAdd, orderId: string) => {
+export const orderUpdateApi = (body: OrderUpdateBodyAdd, orderId: string) => {
     return axiosInstance.put(`${API_ENDPOINTS.orderUpdate}/${orderId}`, body);
 }
 
@@ -30,10 +31,15 @@ export const retrieveOrder = (orderId: string|unknown) => {
     return axiosInstance.get(`${API_ENDPOINTS.orderRetrieve}/${orderId}`);
 }
 
-export const createPayment = (body: any) => {
+export const createPayment = (body: PaymentBodyType) => {
     return axiosInstance.post(`${API_ENDPOINTS.payment}`, body);
 }
 
 export const catalogSearchApi = (body: CatalogSearchBody) => {
     return axiosInstance.post(`${API_ENDPOINTS.catalogSearch}`, body);
+}
+
+
+export const getCatalogObject = (objId: string|unknown) => {
+    return axiosInstance.get(`${API_ENDPOINTS.catalogObject}/${objId}`);
 }

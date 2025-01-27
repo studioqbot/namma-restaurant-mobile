@@ -1,21 +1,30 @@
 'use client'
 import GlobalContext from '@/constants/global-context';
-import { ImageType, LineItemsType, NammaSpecialItems, OrderUpdateBodyAdd } from '@/constants/types';
+import { ImageType, LineItemsType, ModifierDataType, ModifierType, NammaSpecialItems, OrderUpdateBodyAdd } from '@/constants/types';
 import { catalogItems, nammaSpecialItems, orderCreateApi, orderUpdateApi } from '@/services/apiServices';
-import { getDataFromLocalStorage, isEmptyObj, setDataInLocalStorage } from '@/utils/genericUtilties';
+import { getDataFromLocalStorage, isEmptyObj, removeItemFrmLocalStorage, setDataInLocalStorage } from '@/utils/genericUtilties';
 import { useRouter } from 'next/navigation';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import ModifierModal from '../../../constants/modifier-modal'
 import dayjs, { Dayjs } from 'dayjs';
 import Image from 'next/image';
-import placeHolder from '../../../../public/assets/images/place-holder.png'
+import placeHolder from '../../../../public/assets/images/place-holder.png';
+
+export interface CatelogFilterBody {
+  limit: number;
+  custom_attribute_filters: [
+    {
+      bool_filter: boolean,
+      custom_attribute_definition_id: string
+    }
+  ]
+}
 interface NammaSpecialCardProps {
   data: NammaSpecialItems;
   image: ImageType | undefined;
   lineItems: LineItemsType[];
   setLineItems: React.Dispatch<React.SetStateAction<LineItemsType[]>>;
   setIsItemAdded: React.Dispatch<React.SetStateAction<boolean>>;
-  modifierList: any[]
+  modifierList: ModifierDataType[];
 
 }
 
@@ -28,8 +37,8 @@ const NammaSpecialCard = (props: NammaSpecialCardProps) => {
   const { setCartItemCount, cartItemCount, isOrderUpdate, orderDetails,
     setUpdateLineItem, updateLineItem, setFieldToRemove } = useContext(GlobalContext);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [modifierListData, setModifierListData] = useState([]);
-  const [selectedOption, setSelectedOption] = useState<string[]>([]);
+  const [modifierListData, setModifierListData] = useState<ModifierType[]>([]);
+  const [selectedOption, setSelectedOption] = useState<string>('');
 
   const matchedItem: (LineItemsType | undefined) = useMemo(() => {
     return lineItems?.find(
@@ -118,8 +127,8 @@ const NammaSpecialCard = (props: NammaSpecialCardProps) => {
     setIsAdded(true)
     if (data?.item_data?.modifier_list_info && data?.item_data?.modifier_list_info[0]?.modifier_list_id) {
       setIsModalOpen(true);
-      const modifierData = modifierList?.find((modifier) => modifier?.id === data?.item_data?.modifier_list_info[0]?.modifier_list_id)
-      setModifierListData(modifierData?.modifier_list_data?.modifiers);
+      const modifierData = modifierList?.find((modifier) => modifier?.id === data?.item_data?.modifier_list_info[0]?.modifier_list_id) as ModifierDataType | undefined;
+      setModifierListData(modifierData?.modifier_list_data?.modifiers || []);
 
     }
 
@@ -146,33 +155,35 @@ const NammaSpecialCard = (props: NammaSpecialCardProps) => {
 
 
   const handleCheckboxChange = (modifierName: string, modifierId: string) => {
-
-
-    if (selectedOption.includes(modifierName)) {
-      setSelectedOption(selectedOption.filter((item) => item !== modifierName));
-
-    } else {
-      setSelectedOption([...selectedOption, modifierName]);
-
-      setLineItems((prevData: any) =>
-        prevData?.map((item: any) => {
-          const existingModifiers = item?.modifiers || [];
-          const isDuplicate = existingModifiers.some(
-            (modifier: any) => modifier.catalog_object_id === modifierId
-          );
-          return {
-            ...item,
-            modifiers: isDuplicate
-              ? existingModifiers
-              : [...existingModifiers, { catalog_object_id: modifierId }],
-          };
-        })
-      );
+    setSelectedOption(modifierName);
 
 
 
+    setLineItems((prevData: LineItemsType[]) => {
+      const addModifier = prevData?.find((item) => item.catalog_object_id === data?.item_data?.variations[0]?.id);
+      if (addModifier) {
+        addModifier.modifiers = [{ catalog_object_id: modifierId }]
+      }
+      return prevData
     }
+
+    );
+
+    if (isOrderUpdate && isOrderUpdate !== 'create') {
+      setUpdateLineItem((prevData: LineItemsType[]) => {
+        const addModifier = prevData?.find((item) => item.catalog_object_id === data?.item_data?.variations[0]?.id);
+        if (addModifier) {
+          addModifier.modifiers = [{ catalog_object_id: modifierId }]
+        }
+        return prevData
+      }
+
+      );
+    }
+
+
   };
+
 
 
 
@@ -182,12 +193,12 @@ const NammaSpecialCard = (props: NammaSpecialCardProps) => {
       <div className="relative overflow-hidden mb-4">
         {/* <img src={image?.image_data?.url ? image?.image_data?.url : '#'} alt="card-img" className="w-[163px] h-[163px] rounded-[15px]" /> */}
         {image?.image_data?.url ? <img src={image?.image_data?.url ? image?.image_data?.url : '#'} alt="card-img" className="w-[163px] h-[163px] rounded-[15px]" /> :
-        <Image src={placeHolder} alt="card-img" className="w-[163px] h-[163px] rounded-[15px]"  />}
+          <Image src={placeHolder} alt="card-img" className="w-[163px] h-[163px] rounded-[15px]" />}
       </div>
 
       <h3 className="text-[14px] text-[#222A4A] font-medium px-[28px]">{data?.item_data?.name}</h3>
       <div className="flex flex-col items-center justify-between mt-auto">
-        <span className="text-[14px] text-[#222A4A] font-bold mt-[15px]">${data?.item_data?.variations[0]?.item_variation_data?.price_money?.amount}</span>
+        <span className="text-[14px] text-[#222A4A] font-bold mt-[15px]">${data?.item_data?.variations[0]?.item_variation_data?.price_money?.amount/100}</span>
 
 
         {(isAdded || (matchedItem && !isEmptyObj(matchedItem))) ? <div className="flex items-center border border-[#A02621] rounded-[100px] mt-[11px] overflow-hidden text-[#A02621] text-[12px]">
@@ -224,13 +235,13 @@ const NammaSpecialCard = (props: NammaSpecialCardProps) => {
           >
             <div className="w-full flex flex-col items-start justify-center">
               <h2 className="text-lg font-semibold text-gray-800 mb-[10px]">Customization</h2>
-              {modifierListData && modifierListData?.length && modifierListData.map((modifier: any) => (
+              {modifierListData && modifierListData?.length && modifierListData.map((modifier: ModifierType) => (
                 <div
                   key={modifier?.id}
                   className="flex items-center justify-between w-full py-[10px] relative"
                 >
                   <span className='absolute w-full border-b border-dotted border-[#222A4A] z-[1]' />
-                  <span className=" bg-white min-w-[100px] relative z-[2]">{modifier?.modifier_data?.name}</span>
+                  <span  className="bg-white min-w-[100px] relative z-[2] text-left">{modifier?.modifier_data?.name}</span>
                   <div className="bg-white relative z-[2] flex pl-[10px]">
 
                     <input
@@ -238,7 +249,7 @@ const NammaSpecialCard = (props: NammaSpecialCardProps) => {
                       id={modifier?.modifier_data?.name}
                       name="customization"
                       value={modifier?.modifier_data?.name}
-                      checked={selectedOption.includes(modifier?.modifier_data?.name)}
+                      checked={selectedOption === modifier?.modifier_data?.name}
                       onChange={() => handleCheckboxChange(modifier?.modifier_data?.name, modifier?.id)}
                       className="hidden peer"
                     />
@@ -257,7 +268,13 @@ const NammaSpecialCard = (props: NammaSpecialCardProps) => {
 
                 </div>
               ))}
-
+              <div className='w-full flex justify-end mt-4' onClick={() => {
+                if (selectedOption) {
+                  setIsModalOpen(false)
+                }
+              }}>
+                <button className='bg-[#FFC300] px-[32px] py-[5px] rounded-[100px] text-[14px] font-bold text-[#A02621] relative'>Confirm</button>
+              </div>
 
             </div>
           </div>
@@ -271,11 +288,12 @@ const NammaSpecials = () => {
 
 
   const { isOrderUpdate, setOrderDetails, lineItems, setLineItems, orderDetails,
-    updateLineItem, setIsOrderUpdate, fieldToRemove, setIsOrdered, isOrdered } = useContext(GlobalContext);
+    updateLineItem, setIsOrderUpdate, setIsOrdered, setUpdateLineItem, setGlobalLoading } = useContext(GlobalContext);
   const [isItemAdded, setIsItemAdded] = useState(false);
-  const [imageData, setImageData] = useState([])
-  const [nammaSpecialItemsData, setNammaSpecialItemsData] = useState([])
-  const [modifierList, setMofierList] = useState<any[]>([]);
+  const [imageData, setImageData] = useState<ImageType[]>([])
+  const [nammaSpecialItemsData, setNammaSpecialItemsData] = useState<NammaSpecialItems[]>([])
+  const [modifierList, setMofierList] = useState<ModifierDataType[]>([]);
+
   const dataLimit = 6;
 
   const router = useRouter();
@@ -283,17 +301,21 @@ const NammaSpecials = () => {
 
   const getNammaSpeacialDatas = async () => {
     try {
-      const body = {
+      const body: CatelogFilterBody = {
         limit: dataLimit,
         custom_attribute_filters: [
           {
             bool_filter: true,
+            // custom_attribute_definition_id: "P6DTBZV62JU2X2AXJQL34JH6"
             custom_attribute_definition_id: "MOY2QZ3ECH5SURG6SRQB3UEJ"
+
           }
         ]
       }
       const response = await nammaSpecialItems(body);
       if (response?.status === 200) {
+        console.log('response?.data?.items', response?.data);
+
         setNammaSpecialItemsData(response?.data?.items);
         setDataInLocalStorage('NammaSpecialItemsData', response?.data?.items);
         const currentTimePlusOneWeek = dayjs().add(1, 'week').toDate();
@@ -323,30 +345,27 @@ const NammaSpecials = () => {
       console.log(error);
     }
   }
-
   const getModifierListData = async () => {
     try {
-      const params = { types: 'MODIFIER_LIST' }
+      const params = { types: 'MODIFIER_LIST' };
       const response = await catalogItems(params);
       if (response?.status === 200) {
         setDataInLocalStorage('ModifierListData', response?.data?.objects);
         setMofierList(response?.data?.objects);
         const currentTimePlusOneWeek = dayjs().add(1, 'week').toDate();
         setDataInLocalStorage('DateHome', currentTimePlusOneWeek);
-      }
+      };
 
     } catch (error) {
       console.log('Error', error);
     }
   };
 
-
   const orderCreate = async () => {
-
+    setGlobalLoading(true)
     const body = {
-
       order: {
-        location_id: 'LC1BQTNRBNPKQ',
+        location_id: process.env.NEXT_PUBLIC_LOCATION_ID,
         line_items: lineItems,
         pricing_options: {
           auto_apply_taxes: true,
@@ -356,27 +375,30 @@ const NammaSpecials = () => {
     }
     try {
       const response = await orderCreateApi(body)
-
+      setGlobalLoading(false)
       if (response?.status === 200) {
-        setIsOrderUpdate('created');
-        setDataInLocalStorage('OrderId', response?.data?.order?.id);
         setOrderDetails(response?.data?.order);
-        setLineItems(response?.data?.order?.line_items || []);
-        setIsOrdered(!isOrdered);
+        setLineItems(response?.data?.order?.line_items);
+        setDataInLocalStorage('OrderId', response?.data?.order?.id);
+        setIsOrderUpdate('created');
+        setIsOrdered(true);
       }
 
 
     } catch (error) {
+      setGlobalLoading(false)
       console.log('Error', error);
     }
   }
 
-  const orderUpdate = async () => {
 
+
+
+  const orderUpdate = async () => {
+    setGlobalLoading(true)
     const body: OrderUpdateBodyAdd = {
-      fields_to_clear: fieldToRemove,
       order: {
-        location_id: 'LC1BQTNRBNPKQ',
+        location_id: process.env.NEXT_PUBLIC_LOCATION_ID,
         line_items: updateLineItem,
         pricing_options: {
           auto_apply_taxes: true,
@@ -387,24 +409,26 @@ const NammaSpecials = () => {
     }
     try {
       const response = await orderUpdateApi(body, orderDetails?.id)
-
+      setGlobalLoading(false)
       if (response?.status === 200) {
 
         setOrderDetails(response?.data?.order);
-        setLineItems(response?.data?.order?.line_items || []);
+        setLineItems(response?.data?.order?.line_items);
+        setUpdateLineItem([])
         setIsOrderUpdate('updated');
-        setIsOrdered(!isOrdered);
+        setIsOrdered(true);
       }
 
     } catch (error) {
+      setGlobalLoading(false)
       console.log('Error', error);
     }
   };
 
   const getNammaSpeacialDataFromLocal = () => {
-    const imageDatas: any = getDataFromLocalStorage('ImageData');
-    const nammaSpecialData: any = getDataFromLocalStorage('NammaSpecialItemsData');
-    const modifierListDatas: any[] | null = getDataFromLocalStorage('ModifierListData');
+    const imageDatas: ImageType[] | null = getDataFromLocalStorage('ImageData');
+    const nammaSpecialData: NammaSpecialItems[] | null= getDataFromLocalStorage('NammaSpecialItemsData');
+    const modifierListDatas: ModifierDataType[] | null = getDataFromLocalStorage('ModifierListData');
 
     if (nammaSpecialData && nammaSpecialData?.length > 0) {
       setNammaSpecialItemsData(nammaSpecialData);
@@ -426,7 +450,7 @@ const NammaSpecials = () => {
     if (((dayjs(dateData).isSame() || dayjs(dateData).isBefore()) || !dateData)) {
       getNammaSpeacialDatas();
       getNammaSpeacialItemsImage();
-      getModifierListData()
+      getModifierListData();
     }
 
 
@@ -434,12 +458,18 @@ const NammaSpecials = () => {
 
   useEffect(() => {
     if ((isOrderUpdate === 'create')) {
-      orderCreate()
+      orderCreate();
     } else if ((isOrderUpdate && isItemAdded)) {
-      orderUpdate()
+      orderUpdate();
     }
 
   }, [isOrderUpdate]);
+
+  useEffect(() => {
+    if (lineItems?.length === 0) {
+        removeItemFrmLocalStorage(['OrderId'])
+    }
+}, []);
 
 
 
@@ -456,9 +486,9 @@ const NammaSpecials = () => {
       <>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-y-[60px] mb-[40px] relative z-10">
 
-          {(nammaSpecialItemsData && nammaSpecialItemsData?.length > 0) && nammaSpecialItemsData?.map((data: any) => {
+          {(nammaSpecialItemsData && nammaSpecialItemsData?.length > 0) && nammaSpecialItemsData?.map((data: NammaSpecialItems) => {
 
-            const image: any | undefined = imageData?.find((img: any) => {
+            const image = imageData?.find((img : ImageType) => {
               if (data?.item_data?.image_ids?.length) {
                 return img?.id === data?.item_data?.image_ids[0]
               }
@@ -480,7 +510,7 @@ const NammaSpecials = () => {
           )}
           <div className="text-center relative z-10">
             <button
-              // onClick={handleExploreMenu}
+              onClick={() => router.push('/our-menu')}
               className="w-full max-w-md py-[15px] border border-[#A02621] rounded-[100px] mt-[11px] overflow-hidden text-[#A02621] text-[15px] font-medium"
             >
               Explore Full Menu

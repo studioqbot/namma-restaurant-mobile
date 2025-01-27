@@ -29,6 +29,10 @@ interface GlobalContextType {
     setCatalogCategoryTab: React.Dispatch<React.SetStateAction<CategoryDataType[]>>;
     isOrdered: boolean;
     setIsOrdered:React.Dispatch<React.SetStateAction<boolean>>;
+    globalLoading: boolean;
+    setGlobalLoading:React.Dispatch<React.SetStateAction<boolean>>;
+    isCartOpen: boolean;
+    setIsCartOpen:React.Dispatch<React.SetStateAction<boolean>>;
 
 
 
@@ -57,6 +61,10 @@ const GlobalContext = createContext<GlobalContextType>({
     setCatalogCategoryTab: () => { },
     isOrdered: false, 
     setIsOrdered: () => { },
+    globalLoading: false, 
+    setGlobalLoading: () => { },
+    isCartOpen: false, 
+    setIsCartOpen: () => { },
 
 
 });
@@ -75,7 +83,8 @@ const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =
     const [amount, setAmount] = useState<string | number>(0);
     const [isOrdered, setIsOrdered] = useState<boolean>(false);
     const [catalogCategoryTab, setCatalogCategoryTab] = useState<CategoryDataType[]>([]);
-
+    const [globalLoading, setGlobalLoading] = useState(false);
+    const [isCartOpen, setIsCartOpen] = useState(false);
 
     const contextValue = useMemo(() => {
         return {
@@ -87,11 +96,12 @@ const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =
             updateLineItem, setUpdateLineItem,
             fieldToRemove, setFieldToRemove, amount, setAmount,
             catalogCategoryTab, setCatalogCategoryTab,
-            isOrdered, setIsOrdered
+            isOrdered, setIsOrdered,globalLoading, setGlobalLoading,
+            isCartOpen, setIsCartOpen
         }
     }, [cartItemCount, isOrderUpdate, orderDetails, fieldToRemove,
         updateLineItem, lineItems, catalogCategoryAndItem, catalogCategory,
-        amount, catalogCategoryTab, isOrdered])
+        amount, catalogCategoryTab, isOrdered, globalLoading, isCartOpen])
 
     return <GlobalContext.Provider value={contextValue}>{children}</GlobalContext.Provider>
 }
