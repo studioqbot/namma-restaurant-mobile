@@ -80,14 +80,14 @@ const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsI
         const count = quantityVal ? parseInt(quantityVal) : quantity;
         setCartItemCount(cartItemCount - 1);
         if (count == 1) {
-
+            setIsAdded(false);
             const removeLineItem = lineItems?.filter((item) => item?.catalog_object_id !== data?.item_data?.variations[0]?.id);
             setLineItems(removeLineItem);
             const updateItem = orderDetails?.line_items?.find((obj: LineItemsType) => obj.catalog_object_id === data?.item_data?.variations[0]?.id);
             setFieldToRemove((prevData) => [...prevData, `line_items[${updateItem?.uid}]`] as string[])
             const removeUpdateLineItem = updateLineItem?.filter((item: LineItemsType) => item?.uid !== updateItem?.uid);
             setUpdateLineItem(removeUpdateLineItem);
-        } else {
+        } else  {
 
             setLineItems((prevData: LineItemsType[]) => {
                 const item = prevData.find((obj: LineItemsType) => obj.catalog_object_id === data?.item_data?.variations[0]?.id);

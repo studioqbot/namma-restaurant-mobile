@@ -90,7 +90,7 @@ const NammaSpecialCard = (props: NammaSpecialCardProps) => {
     const count = quantityVal ? parseInt(quantityVal) : quantity;
     setCartItemCount(cartItemCount - 1);
     if (count == 1) {
-
+      setIsAdded(false);
       const removeLineItem = lineItems?.filter((item) => item?.catalog_object_id !== data?.item_data?.variations[0]?.id);
       setLineItems(removeLineItem);
       const updateItem = orderDetails?.line_items?.find((obj: LineItemsType) => obj.catalog_object_id === data?.item_data?.variations[0]?.id);
@@ -314,7 +314,6 @@ const NammaSpecials = () => {
       }
       const response = await nammaSpecialItems(body);
       if (response?.status === 200) {
-        console.log('response?.data?.items', response?.data);
 
         setNammaSpecialItemsData(response?.data?.items);
         setDataInLocalStorage('NammaSpecialItemsData', response?.data?.items);

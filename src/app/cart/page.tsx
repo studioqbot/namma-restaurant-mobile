@@ -241,7 +241,6 @@ function CartScreen() {
 
     useEffect(() => {
         const orderId = getDataFromLocalStorage('OrderId');
-        console.log('orderId', orderId);
 
         if (orderDetails.id || orderId) {
             fetchOrderDetails(orderDetails.id || orderId)
@@ -564,7 +563,6 @@ const CartItem = (props: CartProps) => {
                 if (response?.status === 200) {
                     setIsModalOpen(true);
                     const modifierData = modifierList?.find((modifier) => modifier?.id === response?.data?.object?.modifier_data?.modifier_list_id)
-                    console.log('modifierData', modifierData, response?.data?.object?.modifier_data?.modifier_list_id);
 
                     setModifierListData(modifierData?.modifier_list_data?.modifiers || [])
                 }
