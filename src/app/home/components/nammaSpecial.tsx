@@ -306,8 +306,8 @@ const NammaSpecials = () => {
         custom_attribute_filters: [
           {
             bool_filter: true,
-            // custom_attribute_definition_id: "P6DTBZV62JU2X2AXJQL34JH6"
-            custom_attribute_definition_id: "MOY2QZ3ECH5SURG6SRQB3UEJ"
+            custom_attribute_definition_id: "P6DTBZV62JU2X2AXJQL34JH6"
+            // custom_attribute_definition_id: "MOY2QZ3ECH5SURG6SRQB3UEJ"
 
           }
         ]
