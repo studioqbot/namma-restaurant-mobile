@@ -1,7 +1,7 @@
 'use client';
 import Loader from '@/components/loder';
 import GlobalContext from '@/constants/global-context';
-import { CatalogItemsType, CategoryDataType, LineItemsType, ModifierDataType, ModifierIds, ModifierType, OrderCreateBody, OrderDetailsType, OrderUpdateBodyAdd } from '@/constants/types';
+import { CatalogItemsType, CategoryDataType, LineItemsType, ModifierDataType, ModifierIds, ModifierType, OrderCreateBody,  OrderUpdateBodyAdd } from '@/constants/types';
 import { catalogItems, catalogSearchApi, orderCreateApi, orderUpdateApi } from '@/services/apiServices';
 import { getDataFromLocalStorage, isEmptyObj, removeItemFrmLocalStorage, setDataInLocalStorage } from '@/utils/genericUtilties';
 import dayjs, { Dayjs } from 'dayjs';
@@ -19,7 +19,7 @@ interface OurMenuItemsType {
     setFieldToClear: React.Dispatch<React.SetStateAction<string[]>>;
 
 };
-const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsItemAdded, updateLineItem, modifierList, setFieldToClear }: OurMenuItemsType) => {
+const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsItemAdded, updateLineItem, modifierList }: OurMenuItemsType) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [quantity, setQuantity] = useState(0);
     const [modifierListData, setModifierListData] = useState<ModifierType[] | undefined>([]);

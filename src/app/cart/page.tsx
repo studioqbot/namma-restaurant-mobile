@@ -50,7 +50,7 @@ const button = {
 function CartScreen() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { orderDetails, setCartItemCount, cartItemCount, setLineItems, setOrderDetails, setIsOrderUpdate,
-        setGlobalLoading,   setAmount, setFieldToRemove, setUpdateLineItem, isOrdered, globalLoading } = useContext(GlobalContext)
+           setAmount, setFieldToRemove, setUpdateLineItem, isOrdered, globalLoading } = useContext(GlobalContext)
     const [loading, setLoading] = useState<boolean>(false);
     const [yourDetails, setYourDetails] = useState<YourDetailsType>();
     const [modifierList, setMofierList] = useState<ModifierDataType[]>([]);
