@@ -108,7 +108,9 @@ function CartScreen() {
 
                 }
             } catch (error) {
+                setLoading(true);
                 console.log("Error", error);
+                alert('Card nonce not found');
 
             }
         }

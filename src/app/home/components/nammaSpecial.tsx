@@ -289,7 +289,7 @@ const NammaSpecials = () => {
 
 
   const { isOrderUpdate, setOrderDetails, lineItems, setLineItems, orderDetails,
-    updateLineItem, setIsOrderUpdate, setIsOrdered, setUpdateLineItem, setGlobalLoading } = useContext(GlobalContext);
+    updateLineItem, setIsOrderUpdate, setIsOrdered, setUpdateLineItem, setGlobalLoading, fieldToRemove , setFieldToRemove} = useContext(GlobalContext);
   const [isItemAdded, setIsItemAdded] = useState(false);
   const [imageData, setImageData] = useState<ImageType[]>([])
   const [nammaSpecialItemsData, setNammaSpecialItemsData] = useState<NammaSpecialItems[]>([])
@@ -398,6 +398,7 @@ const NammaSpecials = () => {
   const orderUpdate = async () => {
     setGlobalLoading(true)
     const body: OrderUpdateBodyAdd = {
+      fields_to_clear: fieldToRemove,
       order: {
         location_id: process.env.NEXT_PUBLIC_LOCATION_ID,
         line_items: updateLineItem,
@@ -418,6 +419,7 @@ const NammaSpecials = () => {
         setUpdateLineItem([])
         setIsOrderUpdate('updated');
         setIsOrdered(true);
+        setFieldToRemove([])
       }
 
     } catch (error) {
