@@ -102,7 +102,7 @@ function Header() {
       <div className='container px-4'>
         <nav className="flex justify-between items-center">
           {/* Logo */}
-          <div className="flex items-center">
+          <div className="flex items-center" onClick={() => router.push('/home')}>
             <img src="/assets/images/Logo.svg" alt="Logo" className="h-[45px] w-auto" />
           </div>
 

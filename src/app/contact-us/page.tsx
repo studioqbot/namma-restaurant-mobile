@@ -57,9 +57,15 @@ const OurMenu = () => {
 
                                     <div className='w-full flex flex-row items-center text-[14px] text-[#222A4A] leading-[21px] mt-[20px] gap-[3px]'>
                                         <span className=' font-semibold'>Call us now:</span>
-                                        <span className='text-[#A02621]'>
-                                            <Link href="tel:+14086493417">408-649-3417</Link></span> and <span className='text-[#A02621]'>
-                                            <Link href="tel:+14086493418" >408-649-3418</Link></span>
+                                        <div className="flex flex-wrap items-center justify-center space-x-2 md:space-x-4">
+      <Link href="tel:+14086493417">
+        <span className="text-[#A02621] hover:underline">408-649-3417</span>
+      </Link>
+      <span>&</span>
+      <Link href="tel:+14086493418">
+        <span className="text-[#A02621] hover:underline">408-649-3418</span>
+      </Link>
+    </div>
                                     </div>
                                     <div className='w-full flex flex-row items-center text-[14px] text-[#222A4A] leading-[21px] mb-[10px] gap-[3px]'>
                                         <span className=' font-semibold'>Email:</span> <span className='text-[#A02621]'>

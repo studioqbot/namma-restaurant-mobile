@@ -84,7 +84,7 @@ function CartScreen() {
             const body = {
                 source_id: tokenData?.token,
                 idempotency_key: window.crypto.randomUUID(),
-                location_id: "LC1BQTNRBNPKQ",
+                location_id: process.env.NEXT_PUBLIC_LOCATION_ID,
                 amount_money: {
                     amount: orderDetails?.total_money?.amount,
                     currency: "USD"
@@ -206,11 +206,11 @@ function CartScreen() {
     };
 
     const fetchOrderDetails = async (orderId: string | unknown) => {
-        setGlobalLoading(true)
+        // setGlobalLoading(true)
         try {
 
             const response = await retrieveOrder(orderId);
-            setGlobalLoading(false)
+            // setGlobalLoading(false)
             if (response?.status === 200 && response?.data?.order) {
                 setOrderDetails(response?.data?.order);
                 setLineItems(response?.data?.order?.line_items || []);
@@ -219,7 +219,7 @@ function CartScreen() {
                 setCartItemCount(totalQuantity)
             }
         } catch (error) {
-            setGlobalLoading(false)
+            // setGlobalLoading(false)
             console.log(error);
 
         }
@@ -417,7 +417,7 @@ function CartScreen() {
                                         handleSubmitPayment(token)
                                     }}
 
-                                    locationId="LC1BQTNRBNPKQ"
+                                    locationId={process.env.NEXT_PUBLIC_LOCATION_ID}
                                 >
                                     <CreditCard render={(Button: ButtonComponent) => <Button style={button} >
                                         <span>Securely Pay ${orderDetails?.total_money?.amount / 100}</span>

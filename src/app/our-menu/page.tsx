@@ -13,7 +13,7 @@ interface OurMenuItemsType {
     setUpdateLineItem: React.Dispatch<React.SetStateAction<LineItemsType[]>>;
     updateLineItem: LineItemsType[];
     setIsItemAdded: React.Dispatch<React.SetStateAction<boolean>>;
-    modifierList: ModifierDataType[] ;
+    modifierList: ModifierDataType[];
     modifierIds: ModifierIds[];
     setModifierIds: React.Dispatch<React.SetStateAction<ModifierIds[]>>;
     setFieldToClear: React.Dispatch<React.SetStateAction<string[]>>;
@@ -22,13 +22,13 @@ interface OurMenuItemsType {
 const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsItemAdded, updateLineItem, modifierList, setFieldToClear }: OurMenuItemsType) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [quantity, setQuantity] = useState(0);
-    const [modifierListData, setModifierListData] = useState<ModifierType[]|undefined>([]);
+    const [modifierListData, setModifierListData] = useState<ModifierType[] | undefined>([]);
     const [selectedOption, setSelectedOption] = useState<string>('');
 
 
 
     const [isAdded, setIsAdded] = useState(false);
-    const { setCartItemCount, cartItemCount, isOrderUpdate, orderDetails, setOrderDetails } = useContext(GlobalContext);
+    const { setCartItemCount, cartItemCount, isOrderUpdate, orderDetails, setFieldToRemove } = useContext(GlobalContext);
 
     const matchedItem = useMemo(() => {
         return orderDetails?.line_items?.find(
@@ -36,12 +36,14 @@ const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsI
         );
     }, [lineItems, data]);
 
-    const handleCountIncrement = async (quantityVal: string | undefined) => {
-        setIsItemAdded(true)
-        const count = quantityVal ? parseInt(quantityVal) : quantity;
 
+    const handleCountIncrement = async (quantityVal: string | undefined) => {
+        setIsItemAdded(true);
+        const count = quantityVal ? parseInt(quantityVal) : quantity;
         setQuantity(count + 1);
         setCartItemCount(cartItemCount + 1);
+
+
         setLineItems((prevData: LineItemsType[]) => {
             const items = prevData.find((obj: LineItemsType) => obj.catalog_object_id === data?.item_data?.variations[0]?.id);
             if (items) {
@@ -50,12 +52,12 @@ const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsI
             }
             return prevData
         });
+
         if ((isOrderUpdate === 'update' || isOrderUpdate === 'created' || isOrderUpdate === 'updated')) {
             const updateItem = orderDetails?.line_items?.find((obj: LineItemsType) => obj.catalog_object_id === data?.item_data?.variations[0]?.id) as LineItemsType | undefined;;
 
-            setUpdateLineItem((prevData) => {
-                const items = prevData.find((obj: LineItemsType) => obj.catalog_object_id === data?.item_data?.variations[0]?.id);
-
+            setUpdateLineItem((prevData: LineItemsType[]) => {
+                const items = prevData.find((obj: LineItemsType) => obj.catalog_object_id === data?.item_data?.variations[0]?.id) as LineItemsType;
                 if (!items) {
                     return [...prevData, {
                         quantity: String(count + 1),
@@ -65,35 +67,26 @@ const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsI
                 } else {
                     items.quantity = String(count + 1);
                     items.uid = updateItem?.uid;
-                    return prevData;
+                    return prevData as LineItemsType[];
                 }
             });
         }
+
     }
 
-    const handleQuantityDecrement = (quantityVal: string | undefined) => {
+
+    const handleCountDecrement = (quantityVal: string | undefined) => {
         setIsItemAdded(true);
         const count = quantityVal ? parseInt(quantityVal) : quantity;
         setCartItemCount(cartItemCount - 1);
         if (count == 1) {
 
-            setIsAdded(false);
-
-
-            const updateItem = orderDetails?.line_items?.find((obj: LineItemsType) => obj.catalog_object_id === data?.item_data?.variations[0]?.id) as LineItemsType | undefined;;
-            setFieldToClear((prevData) => [...prevData, `line_items[${updateItem?.uid}]`] as string[])
             const removeLineItem = lineItems?.filter((item) => item?.catalog_object_id !== data?.item_data?.variations[0]?.id);
             setLineItems(removeLineItem);
-
-
+            const updateItem = orderDetails?.line_items?.find((obj: LineItemsType) => obj.catalog_object_id === data?.item_data?.variations[0]?.id);
+            setFieldToRemove((prevData) => [...prevData, `line_items[${updateItem?.uid}]`] as string[])
             const removeUpdateLineItem = updateLineItem?.filter((item: LineItemsType) => item?.uid !== updateItem?.uid);
             setUpdateLineItem(removeUpdateLineItem);
-
-            const removeLineItemUpdate = orderDetails?.line_items?.filter((item: LineItemsType) => item?.uid !== updateItem?.uid);
-            setOrderDetails((prevData: OrderDetailsType) => {
-                return { ...prevData, line_items: removeLineItemUpdate };
-            });
-
         } else {
 
             setLineItems((prevData: LineItemsType[]) => {
@@ -105,24 +98,7 @@ const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsI
                 return prevData;
             });
 
-            if ((isOrderUpdate === 'update' || isOrderUpdate === 'created' || isOrderUpdate === 'updated')) {
-                const updateItem = orderDetails?.line_items?.find((obj: LineItemsType) => obj.catalog_object_id === data?.item_data?.variations[0]?.id) as LineItemsType | undefined;
 
-                setUpdateLineItem((prevData) => {
-                    const items = prevData.find((obj: LineItemsType) => obj.catalog_object_id === data?.item_data?.variations[0]?.id);
-                    if (!items) {
-                        return [...prevData, {
-                            quantity: String(count - 1),
-                            uid: updateItem?.uid,
-                            catalog_object_id: data?.item_data?.variations[0]?.id
-                        }] as LineItemsType[]
-                    } else {
-                        items.quantity = String(count - 1);
-                        items.uid = updateItem?.uid;
-                        return prevData;
-                    }
-                });
-            }
         };
 
         if (matchedItem?.quantity) {
@@ -132,19 +108,15 @@ const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsI
         };
     };
 
-
     const handleAddClick = () => {
         setIsItemAdded(true)
-        setQuantity(quantity + 1);
-        setCartItemCount(cartItemCount + 1);
-        setIsAdded(true);
-
+        setQuantity(quantity + 1)
+        setCartItemCount(cartItemCount + 1)
+        setIsAdded(true)
         if (data?.item_data?.modifier_list_info && data?.item_data?.modifier_list_info[0]?.modifier_list_id) {
             setIsModalOpen(true);
-
-            const modifierData = modifierList?.find((modifier) => modifier?.id === data?.item_data?.modifier_list_info[0]?.modifier_list_id)
-
-            setModifierListData(modifierData?.modifier_list_data?.modifiers)
+            const modifierData = modifierList?.find((modifier) => modifier?.id === data?.item_data?.modifier_list_info[0]?.modifier_list_id) as ModifierDataType | undefined;
+            setModifierListData(modifierData?.modifier_list_data?.modifiers || []);
 
         }
 
@@ -158,7 +130,7 @@ const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsI
                 return [...prevData, {
                     quantity: String(quantity + 1),
                     catalog_object_id: data?.item_data?.variations[0]?.id,
-                }] as LineItemsType[];
+                }] as LineItemsType[]
             });
             setUpdateLineItem((prevData) => {
                 return [...prevData, {
@@ -167,7 +139,8 @@ const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsI
                 }] as LineItemsType[];
             })
         }
-    };
+    }
+
 
 
     const handleCheckboxChange = (modifierName: string, modifierId: string) => {
@@ -208,12 +181,12 @@ const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsI
             <div className="flex items-center justify-between py-2 relative w-full">
                 <div className='flex flex-col font-semibold'>
                     <span className="bg-[#eee1d1] text-[16px] text-[#222A4A] pr-[25px]">{data?.item_data?.name}</span>
-                    <span className="bg-[#eee1d1] text-[16px] text-[#222A4A] font-normal">${data?.item_data?.variations[0]?.item_variation_data?.price_money?.amount}</span>
+                    <span className="bg-[#eee1d1] text-[16px] text-[#222A4A] font-normal">${data?.item_data?.variations[0]?.item_variation_data?.price_money?.amount / 100}</span>
                 </div>
                 <div className="flex items-center bg-[#eee1d1] gap-4 pl-[11px]">
                     {(isAdded || (matchedItem && !isEmptyObj(matchedItem))) ? <div className="flex items-center min-w-[100px] border border-[#A02621] rounded-[100px] overflow-hidden text-[#A02621] text-[15px]">
                         <button
-                            onClick={() => handleQuantityDecrement(matchedItem?.quantity)}
+                            onClick={() => handleCountDecrement(matchedItem?.quantity)}
                             className="px-3 py-1 text-[#A02621] hover:bg-gray-100"
                         >
                             -
@@ -299,7 +272,7 @@ const OurMenu = () => {
 
     const { setCatalogCategory, setCatalogCategoryAndItem, catalogCategory, isOrderUpdate,
         catalogCategoryAndItem, lineItems, updateLineItem, setLineItems, setUpdateLineItem, orderDetails, setIsOrdered, isOrdered,
-        setIsOrderUpdate, setOrderDetails, setFieldToRemove, fieldToRemove, catalogCategoryTab, setCatalogCategoryTab,  setGlobalLoading } = useContext(GlobalContext);
+        setIsOrderUpdate, setOrderDetails, setFieldToRemove, fieldToRemove, catalogCategoryTab, setCatalogCategoryTab, setGlobalLoading } = useContext(GlobalContext);
     const [modifierList, setMofierList] = useState<ModifierDataType[]>([]);
     const [isItemAdded, setIsItemAdded] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -415,7 +388,7 @@ const OurMenu = () => {
                 setLoading(false)
                 if (response?.status === 200 && response?.data?.objects) {
                     setCatalogCategoryAndItem(response?.data?.objects);
-                    const categoryIds = response?.data?.objects?.map((data :CatalogItemsType) => data?.item_data?.category_id);
+                    const categoryIds = response?.data?.objects?.map((data: CatalogItemsType) => data?.item_data?.category_id);
 
 
                     if (categoryIds?.length) {
@@ -445,7 +418,7 @@ const OurMenu = () => {
         setGlobalLoading(true)
         const body: OrderCreateBody = {
             order: {
-                location_id: 'LC1BQTNRBNPKQ',
+                location_id: process.env.NEXT_PUBLIC_LOCATION_ID,
                 line_items: lineItems,
                 modifiers: modifierIds,
                 pricing_options: {
@@ -480,7 +453,7 @@ const OurMenu = () => {
         const body: OrderUpdateBodyAdd = {
             fields_to_clear: fieldToRemove,
             order: {
-                location_id: 'LC1BQTNRBNPKQ',
+                location_id: process.env.NEXT_PUBLIC_LOCATION_ID,
                 line_items: updateLineItem,
 
                 pricing_options: {
@@ -537,7 +510,7 @@ const OurMenu = () => {
 
     }, [isOrderUpdate]);
 
-    
+
     useEffect(() => {
         if (lineItems?.length === 0) {
             removeItemFrmLocalStorage(['OrderId'])

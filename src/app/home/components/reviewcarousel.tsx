@@ -51,6 +51,50 @@ export default function ReviewCard() {
             </div>
           </div>
         </div>
+        <div>
+          <div className="w-full mx-auto bg-white rounded-[15px] flex flex-col overflow-hidden">
+            {/* Image Section */}
+            <div className="bg-cover bg-no-repeat bg-center w-full min-h-[170px]" style={{ backgroundImage: `url('/assets/images/review-card-img2.svg')` }}></div>
+
+            {/* Text Content */}
+            <div className="py-4 px-5">
+              <p className="text-[#222A4A] text-[13px] leading-[21px] mb-3">
+              Our first time coming to the  restaurant and what better way to find out their best dishes than to  have a thali and sample some of their dishes. The place is huge and very inviting! Fast service as well.
+              </p>
+              <div className="flex items-center space-x-2">
+                <Image
+                  src="/assets/images/google.svg"
+                  alt="Google logo"
+                  width={20}
+                  height={20}
+                />
+                <span className="text-[#222A4A] text-[14px] font-semibold">Bindu A</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div className="w-full mx-auto bg-white rounded-[15px] flex flex-col overflow-hidden">
+            {/* Image Section */}
+            <div className="bg-cover bg-no-repeat bg-center w-full min-h-[170px]" style={{ backgroundImage: `url('/assets/images/review-card-img3.svg')` }}></div>
+
+            {/* Text Content */}
+            <div className="py-4 px-5">
+              <p className="text-[#222A4A] text-[13px] leading-[21px] mb-3">
+              Gosh, the food here is simply fantastic!!! We tried a whole bunch of stuff and everything was perfect and just so delicious. We tried Pallipalayam Paneer for the first time - it was very spicy & tangy and I  loved it.
+              </p>
+              <div className="flex items-center space-x-2">
+                <Image
+                  src="/assets/images/yelp_icon.svg"
+                  alt="Google logo"
+                  width={20}
+                  height={20}
+                />
+                <span className="text-[#222A4A] text-[14px] font-semibold">Sahridaya N</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </Slider>
       </div>
     </div>

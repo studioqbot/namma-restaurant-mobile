@@ -13,14 +13,14 @@ function Footer() {
               <div className="flex flex-wrap gap-[3px] text-[14px] text-[#222A4A] font-normal justify-center">
                 <Link href="/">Home</Link>
                 <span>|</span>
-                <Link href="/menu" className="hover:text-gray-900">Our Menu</Link>
+                <Link href="/our-menu" className="hover:text-gray-900">Our Menu</Link>
                 <span >|</span>
-                <Link href="/contact" className="hover:text-gray-900">Contact us</Link>
+                <Link href="/contact-us" className="hover:text-gray-900">Contact us</Link>
               </div>
               <div className="flex flex-wrap gap-[3px] text-[14px] text-[#222A4A] font-normal justify-center">
-                <Link href="/contact" className="hover:text-gray-900">Privacy Policy</Link>
+                <span className="hover:text-gray-900">Privacy Policy</span>
                 <span >|</span>
-                <Link href="/contact" className="hover:text-gray-900">Terms and Conditions</Link>
+                <span className="hover:text-gray-900">Terms and Conditions</span>
               </div>
               <div className="flex items-center flex-col text-[14px] text-[#222A4A] gap-[3px] my-[25px]">
                 <a href="https://maps.google.com/?q=181+Ranch+Dr,+Milpitas+95035"
