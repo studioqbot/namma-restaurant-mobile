@@ -3,7 +3,6 @@ import Link from 'next/link';
 import React from 'react';
 
 function Footer() {
-  const currentYear = new Date().getFullYear();
   return (
 
     <>
@@ -40,7 +39,7 @@ function Footer() {
               </div>
             </div>
             <div className='flex flex-col items-center text-[14px] text-[#222A4A] text-center'>
-              <span>Copyright © {currentYear} Namma Restaurant. <br /> All rights reserved.</span>
+              <span>Copyright © 2025 Namma Restaurant. <br /> All rights reserved.</span>
               <div className="flex flex-wrap gap-[3px] mt-[25px]">
                 <a href="https://studioq.co.in" target='_blank' className="hover:underline flex items-center gap-1">
                   Built by <Image

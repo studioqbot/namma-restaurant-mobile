@@ -23,7 +23,7 @@ const OurMenu = () => {
                         <iframe className='!w-full' src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d8012.9658033653095!2d-121.91946242632883!3d37.42837464239909!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fc8dededf5023%3A0x823eeab2d4bc523e!2s181%20Ranch%20Dr%2C%20Milpitas%2C%20CA%2095035%2C%20USA!5e0!3m2!1sen!2sin!4v1736788712581!5m2!1sen!2sin" width="600" height="450" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
                     </div>
                     <div className='bg-white mt-[60px] pt-[50px] relative'>
-                        <div className='w-full p-[25px]'>
+                        <div className='w-full'>
                             <div className="text-center flex justify-center">
                                 <img src="/assets/images/namma-special.svg" alt="banner-bg" className="absolute top-[-18px] z-[2]" />
                             </div>
@@ -56,16 +56,16 @@ const OurMenu = () => {
                                     </ul>
 
                                     <div className='w-full flex flex-row items-center text-[14px] text-[#222A4A] leading-[21px] mt-[20px] gap-[3px]'>
-                                        <span className=' font-semibold'>Call us now:</span>
-                                        <div className="flex flex-wrap items-center justify-center space-x-2 md:space-x-4">
-      <Link href="tel:+14086493417">
-        <span className="text-[#A02621] hover:underline">408-649-3417</span>
-      </Link>
-      <span>&</span>
-      <Link href="tel:+14086493418">
-        <span className="text-[#A02621] hover:underline">408-649-3418</span>
-      </Link>
-    </div>
+                                        <span className=' font-semibold whitespace-nowrap'>Call us now:</span>
+                                        <div className="flex flex-nowrap items-center justify-center space-x-[3px] whitespace-nowrap">
+                                        <Link href="tel:+14086493417">
+                                            <span className="text-[#A02621] hover:underline">408-649-3417</span>
+                                        </Link>
+                                        <span>&</span>
+                                        <Link href="tel:+14086493418">
+                                            <span className="text-[#A02621] hover:underline">408-649-3418</span>
+                                        </Link>
+                                        </div>
                                     </div>
                                     <div className='w-full flex flex-row items-center text-[14px] text-[#222A4A] leading-[21px] mb-[10px] gap-[3px]'>
                                         <span className=' font-semibold'>Email:</span> <span className='text-[#A02621]'>

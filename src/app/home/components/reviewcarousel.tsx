@@ -23,8 +23,8 @@ export default function ReviewCard() {
 
   return (
     <div className="w-full">
-      <div className="relative">
-      <img  className="absolute bottom-[-20px] left-[10px] right-0"
+      <div className="relative bg-[#fff] rounded-[20px] min-h-[320px]">
+      <img  className="absolute bottom-[-20px] left-[10px] right-0 w-[95%]"
                   src="/assets/images/review-bg.svg"
                   alt="Google logo"
                 />

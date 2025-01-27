@@ -241,6 +241,7 @@ function CartScreen() {
 
     useEffect(() => {
         const orderId = getDataFromLocalStorage('OrderId');
+        console.log('orderId', orderId);
 
         if (orderDetails.id || orderId) {
             fetchOrderDetails(orderDetails.id || orderId)
@@ -563,6 +564,7 @@ const CartItem = (props: CartProps) => {
                 if (response?.status === 200) {
                     setIsModalOpen(true);
                     const modifierData = modifierList?.find((modifier) => modifier?.id === response?.data?.object?.modifier_data?.modifier_list_id)
+                    console.log('modifierData', modifierData, response?.data?.object?.modifier_data?.modifier_list_id);
 
                     setModifierListData(modifierData?.modifier_list_data?.modifiers || [])
                 }
@@ -592,11 +594,11 @@ const CartItem = (props: CartProps) => {
     };
 
     return <div className='w-full flex items-center justify-between mb-[28px] last:mb-0'>
-        <h3 className="text-[#222A4A] text-[14px] font-medium">
+        <h3 className="text-[#222A4A] text-[14px] items-start font-medium flex flex-col flex-[3]" style={{wordBreak: 'break-all'}}>
             {lineItem?.name}&nbsp;&nbsp;
             {lineItem?.modifiers?.length > 0 && <button className="text-[#A07E21] text-[14px] font-normal" onClick={changeModifier}> (Change)</button>}
         </h3>
-        <div className='flex flex-col items-center ml-3'>
+        <div className='flex flex-col items-center ml-3 flex-1 justify-end'>
             <div className="text-[#222A4A] text-[15px] font-semibold text-center">${(lineItem?.base_price_money?.amount / 100 * (isItemAdded ? quantity : parseInt(lineItem?.quantity))).toFixed(2)}</div>
             <div className="flex items-center w-[100px] mx-auto border border-[#A02621] rounded-[100px] overflow-hidden text-[#A02621] text-[12px]">
                 <button
@@ -622,7 +624,7 @@ const CartItem = (props: CartProps) => {
         </div>
         {
             isModalOpen && <div
-                className="fixed inset-0 bg-black bg-opacity-50 flex items-end justify-center z-[99999] pb-[80px] px-[20px] "
+                className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[99999] pb-[80px] px-[20px] "
                 onClick={() => setIsModalOpen(false)}
             >
                 <div

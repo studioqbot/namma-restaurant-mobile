@@ -80,14 +80,14 @@ const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsI
         const count = quantityVal ? parseInt(quantityVal) : quantity;
         setCartItemCount(cartItemCount - 1);
         if (count == 1) {
-            setIsAdded(false);
+
             const removeLineItem = lineItems?.filter((item) => item?.catalog_object_id !== data?.item_data?.variations[0]?.id);
             setLineItems(removeLineItem);
             const updateItem = orderDetails?.line_items?.find((obj: LineItemsType) => obj.catalog_object_id === data?.item_data?.variations[0]?.id);
             setFieldToRemove((prevData) => [...prevData, `line_items[${updateItem?.uid}]`] as string[])
             const removeUpdateLineItem = updateLineItem?.filter((item: LineItemsType) => item?.uid !== updateItem?.uid);
             setUpdateLineItem(removeUpdateLineItem);
-        } else  {
+        } else {
 
             setLineItems((prevData: LineItemsType[]) => {
                 const item = prevData.find((obj: LineItemsType) => obj.catalog_object_id === data?.item_data?.variations[0]?.id);
@@ -179,11 +179,11 @@ const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsI
     return (
         <>
             <div className="flex items-center justify-between py-2 relative w-full">
-                <div className='flex flex-col font-semibold'>
-                    <span className="bg-[#eee1d1] text-[16px] text-[#222A4A] pr-[25px]">{data?.item_data?.name}</span>
+                <div className='flex flex-col font-semibold flex-[3] '>
+                    <span className="bg-[#eee1d1] text-[16px] text-[#222A4A] pr-[10px]" style={{wordBreak: 'break-all'}}>{data?.item_data?.name}</span>
                     <span className="bg-[#eee1d1] text-[16px] text-[#222A4A] font-normal">${data?.item_data?.variations[0]?.item_variation_data?.price_money?.amount / 100}</span>
                 </div>
-                <div className="flex items-center bg-[#eee1d1] gap-4 pl-[11px]">
+                <div className="flex items-center justify-end bg-[#eee1d1] gap-4 pl-[11px] flex-1">
                     {(isAdded || (matchedItem && !isEmptyObj(matchedItem))) ? <div className="flex items-center min-w-[100px] border border-[#A02621] rounded-[100px] overflow-hidden text-[#A02621] text-[15px]">
                         <button
                             onClick={() => handleCountDecrement(matchedItem?.quantity)}
@@ -211,7 +211,7 @@ const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsI
                 </div>
                 {
                     isModalOpen && <div
-                        className="fixed inset-0 bg-black bg-opacity-50 flex items-end justify-center z-[99999] pb-[80px] px-[20px] "
+                        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[99999] pb-[80px] px-[20px] "
                         onClick={() => setIsModalOpen(false)}
                     >
                         <div
@@ -578,7 +578,7 @@ const OurMenu = () => {
 
             {isMenuModalOpen && (
                 <div
-                    className="fixed inset-0 bg-black bg-opacity-50 flex items-end justify-center z-[99999] pb-[80px] px-[20px] pl-[20%]"
+                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[99999] p-[20px] "
                     onClick={closeMenuModal}
                 >
                     <div

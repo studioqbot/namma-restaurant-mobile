@@ -90,7 +90,7 @@ const NammaSpecialCard = (props: NammaSpecialCardProps) => {
     const count = quantityVal ? parseInt(quantityVal) : quantity;
     setCartItemCount(cartItemCount - 1);
     if (count == 1) {
-      setIsAdded(false);
+
       const removeLineItem = lineItems?.filter((item) => item?.catalog_object_id !== data?.item_data?.variations[0]?.id);
       setLineItems(removeLineItem);
       const updateItem = orderDetails?.line_items?.find((obj: LineItemsType) => obj.catalog_object_id === data?.item_data?.variations[0]?.id);
@@ -226,7 +226,8 @@ const NammaSpecialCard = (props: NammaSpecialCardProps) => {
       </div>
       {
         isModalOpen && <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-end justify-center z-[99999] pb-[80px] px-[20px] "
+          // className="fixed inset-0 bg-black bg-opacity-50 flex items-end justify-center z-[99999] pb-[80px] px-[20px] "
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[99999] pb-[80px] px-[20px] "
           onClick={() => setIsModalOpen(false)}
         >
           <div
@@ -314,6 +315,7 @@ const NammaSpecials = () => {
       }
       const response = await nammaSpecialItems(body);
       if (response?.status === 200) {
+        console.log('response?.data?.items', response?.data);
 
         setNammaSpecialItemsData(response?.data?.items);
         setDataInLocalStorage('NammaSpecialItemsData', response?.data?.items);
