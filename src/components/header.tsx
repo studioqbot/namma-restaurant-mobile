@@ -9,7 +9,7 @@ import dayjs from 'dayjs';
 function Header() {
 
   const router = useRouter();
-  const { cartItemCount, setIsOrderUpdate, isOrderUpdate, lineItems, setIsCartOpen } = useContext(GlobalContext);
+  const { cartItemCount, setIsOrderUpdate, isOrderUpdate, lineItems, setIsCartOpen ,isCartOpen} = useContext(GlobalContext);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const operationalHours: { [key: string]: { open: string; close: string }[] } = {
@@ -23,11 +23,11 @@ function Header() {
       { open: "17:30", close: "22:00" },
     ],
     Thu: [
-      { open: "10:30", close: "18:00" },
+      { open: "10:30", close: "15:00" },
       { open: "17:30", close: "22:00" },
     ],
     Fri: [
-      { open: "09:30", close: "15:00" },
+      { open: "11:30", close: "15:00" },
       { open: "17:30", close: "22:00" },
     ],
     Sat: [
@@ -118,7 +118,7 @@ function Header() {
               <span className="block w-[25px] h-[3px] bg-[#222A4A]"></span>
             </button>
             {/* Cart */}
-            <div className="relative">
+           {isCartOpen&& <div className="relative">
               <button className="bg-[#FFC300] p-[10px] rounded-full" disabled={lineItems.length===0 ? true :false}  onClick={() => {
                 if (!isOrderUpdate) {
                   setIsOrderUpdate('create');
@@ -130,7 +130,7 @@ function Header() {
                 <Image src="/assets/images/cart-icon.svg" alt="Cart" width={20} height={20} />
               </button>
               <span className="absolute w-[20px] h-[20px] bg-[#9E241F] text-[#fff] text-[12px] font-bold rounded-full flex items-center justify-center top-[-5px] right-[-5px]">{cartItemCount}</span>
-            </div>
+            </div>}
           </div>
         </nav>
       </div>

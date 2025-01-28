@@ -63,7 +63,7 @@ export default function ReviewCard() {
               </p>
               <div className="flex items-center space-x-2">
                 <Image
-                  src="/assets/images/google.svg"
+                  src="/assets/images/yelp_icon.svg"
                   alt="Google logo"
                   width={20}
                   height={20}

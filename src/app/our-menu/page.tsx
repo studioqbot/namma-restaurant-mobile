@@ -80,7 +80,7 @@ const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsI
         const count = quantityVal ? parseInt(quantityVal) : quantity;
         setCartItemCount(cartItemCount - 1);
         if (count == 1) {
-
+            setIsAdded(false);
             const removeLineItem = lineItems?.filter((item) => item?.catalog_object_id !== data?.item_data?.variations[0]?.id);
             setLineItems(removeLineItem);
             const updateItem = orderDetails?.line_items?.find((obj: LineItemsType) => obj.catalog_object_id === data?.item_data?.variations[0]?.id);
