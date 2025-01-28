@@ -28,7 +28,7 @@ const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsI
 
 
     const [isAdded, setIsAdded] = useState(false);
-    const { setCartItemCount, cartItemCount, isOrderUpdate, orderDetails, setFieldToRemove } = useContext(GlobalContext);
+    const { setCartItemCount, cartItemCount, isOrderUpdate, orderDetails, setFieldToRemove ,isCartOpen} = useContext(GlobalContext);
 
     const matchedItem = useMemo(() => {
         return orderDetails?.line_items?.find(
@@ -180,11 +180,12 @@ const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsI
         <>
             <div className="flex items-center justify-between py-2 relative w-full">
                 <div className='flex flex-col font-semibold flex-[3] '>
-                    <span className="bg-[#eee1d1] text-[16px] text-[#222A4A] pr-[10px]" style={{wordBreak: 'break-all'}}>{data?.item_data?.name}</span>
+                    <span className="bg-[#eee1d1] text-[16px] text-[#222A4A] pr-[10px]">{data?.item_data?.name}</span>
                     <span className="bg-[#eee1d1] text-[16px] text-[#222A4A] font-normal">${data?.item_data?.variations[0]?.item_variation_data?.price_money?.amount / 100}</span>
                 </div>
                 <div className="flex items-center justify-end bg-[#eee1d1] gap-4 pl-[11px] flex-1">
-                    {(isAdded || (matchedItem && !isEmptyObj(matchedItem))) ? <div className="flex items-center min-w-[100px] border border-[#A02621] rounded-[100px] overflow-hidden text-[#A02621] text-[15px]">
+                   
+                   {isCartOpen &&<> {(isAdded || (matchedItem && !isEmptyObj(matchedItem))) ? <div className="flex items-center min-w-[100px] border border-[#A02621] rounded-[100px] overflow-hidden text-[#A02621] text-[15px]">
                         <button
                             onClick={() => handleCountDecrement(matchedItem?.quantity)}
                             className="px-3 py-1 text-[#A02621] hover:bg-gray-100"
@@ -208,6 +209,7 @@ const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsI
                     >
                         Add
                     </button>}
+                    </>}
                 </div>
                 {
                     isModalOpen && <div

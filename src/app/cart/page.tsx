@@ -596,7 +596,7 @@ const CartItem = (props: CartProps) => {
     };
 
     return <div className='w-full flex items-center justify-between mb-[28px] last:mb-0'>
-        <h3 className="text-[#222A4A] text-[14px] items-start font-medium flex flex-col flex-[3]" style={{wordBreak: 'break-all'}}>
+        <h3 className="text-[#222A4A] text-[14px] items-start font-medium flex flex-col flex-[3]">
             {lineItem?.name}&nbsp;&nbsp;
             {lineItem?.modifiers?.length > 0 && <button className="text-[#A07E21] text-[14px] font-normal" onClick={changeModifier}> (Change)</button>}
         </h3>

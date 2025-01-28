@@ -35,7 +35,7 @@ const NammaSpecialCard = (props: NammaSpecialCardProps) => {
   const [isAdded, setIsAdded] = useState(false);
   const { image, data, lineItems, setLineItems, setIsItemAdded, modifierList } = props;
   const { setCartItemCount, cartItemCount, isOrderUpdate, orderDetails,
-    setUpdateLineItem, updateLineItem, setFieldToRemove } = useContext(GlobalContext);
+    setUpdateLineItem, updateLineItem, setFieldToRemove , isCartOpen} = useContext(GlobalContext);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modifierListData, setModifierListData] = useState<ModifierType[]>([]);
   const [selectedOption, setSelectedOption] = useState<string>('');
@@ -201,7 +201,7 @@ const NammaSpecialCard = (props: NammaSpecialCardProps) => {
         <span className="text-[14px] text-[#222A4A] font-bold mt-[15px]">${data?.item_data?.variations[0]?.item_variation_data?.price_money?.amount/100}</span>
 
 
-        {(isAdded || (matchedItem && !isEmptyObj(matchedItem))) ? <div className="flex items-center border border-[#A02621] rounded-[100px] mt-[11px] overflow-hidden text-[#A02621] text-[12px]">
+        {isCartOpen &&<>{(isAdded || (matchedItem && !isEmptyObj(matchedItem))) ? <div className="flex items-center border border-[#A02621] rounded-[100px] mt-[11px] overflow-hidden text-[#A02621] text-[12px]">
           <button
             className="px-3 py-1 text-red-600 hover:bg-gray-100"
             onClick={() => {
@@ -221,6 +221,7 @@ const NammaSpecialCard = (props: NammaSpecialCardProps) => {
           <button className="px-[35px] py-[4px]  border border-[#A02621] rounded-[100px] mt-[11px] overflow-hidden text-[#A02621] text-[12px]" onClick={handleAddClick}>
             Add
           </button>}
+          </>}
 
 
       </div>
