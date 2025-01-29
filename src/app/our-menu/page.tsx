@@ -1,7 +1,7 @@
 'use client';
 import Loader from '@/components/loder';
 import GlobalContext from '@/constants/global-context';
-import { CatalogItemsType, CategoryDataType, LineItemsType, ModifierDataType, ModifierIds, ModifierType, OrderCreateBody,  OrderUpdateBodyAdd } from '@/constants/types';
+import { CatalogItemsType, CategoryDataType, LineItemsType, ModifierDataType, ModifierIds, ModifierType, OrderCreateBody, OrderUpdateBodyAdd } from '@/constants/types';
 import { catalogItems, catalogSearchApi, orderCreateApi, orderUpdateApi } from '@/services/apiServices';
 import { getDataFromLocalStorage, isEmptyObj, removeItemFrmLocalStorage, setDataInLocalStorage } from '@/utils/genericUtilties';
 import dayjs, { Dayjs } from 'dayjs';
@@ -28,7 +28,7 @@ const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsI
 
 
     const [isAdded, setIsAdded] = useState(false);
-    const { setCartItemCount, cartItemCount, isOrderUpdate, orderDetails, setFieldToRemove ,isCartOpen} = useContext(GlobalContext);
+    const { setCartItemCount, cartItemCount, isOrderUpdate, orderDetails, setFieldToRemove, isCartOpen } = useContext(GlobalContext);
 
     const matchedItem = useMemo(() => {
         return orderDetails?.line_items?.find(
@@ -184,8 +184,8 @@ const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsI
                     <span className="bg-[#eee1d1] text-[16px] text-[#222A4A] font-normal">${data?.item_data?.variations[0]?.item_variation_data?.price_money?.amount / 100}</span>
                 </div>
                 <div className="flex items-center justify-end bg-[#eee1d1] gap-4 pl-[11px] flex-1">
-                   
-                   {isCartOpen &&<> {(isAdded || (matchedItem && !isEmptyObj(matchedItem))) ? <div className="flex items-center min-w-[100px] border border-[#A02621] rounded-[100px] overflow-hidden text-[#A02621] text-[15px]">
+
+                    {isCartOpen && <> {(isAdded || (matchedItem && !isEmptyObj(matchedItem))) ? <div className="flex items-center min-w-[100px] border border-[#A02621] rounded-[100px] overflow-hidden text-[#A02621] text-[15px]">
                         <button
                             onClick={() => handleCountDecrement(matchedItem?.quantity)}
                             className="px-3 py-1 text-[#A02621] hover:bg-gray-100"
@@ -282,7 +282,8 @@ const OurMenu = () => {
     const [catalogCategoryAndItemCopy, setCatalogCategoryAndItemCopy] = useState<CatalogItemsType[]>([]);
     const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
     const [searchValue, setSearchValue] = useState('');
-
+    const [cursor, setCursor] = useState<string>('');
+    const limit = 100;
     const getModifierListData = async () => {
         try {
             const params = { types: 'MODIFIER_LIST' }
@@ -319,6 +320,7 @@ const OurMenu = () => {
             const params = { types: 'ITEM' }
             const response = await catalogItems(params);
             if (response?.status === 200) {
+                setCursor(response?.data?.cursor);
                 setDataInLocalStorage('CatalogItemsData', response?.data?.objects)
                 const currentTimePlusFiveMinutes = dayjs().add(1, 'day').toDate();
 
@@ -326,6 +328,32 @@ const OurMenu = () => {
 
                 setCatalogCategoryAndItem(response?.data?.objects);
                 setCatalogCategoryAndItemCopy(response?.data?.objects);
+            }
+
+
+        } catch (error) {
+            console.log('Error', error);
+
+        }
+    };
+
+    const getMoreCatalofItemAndCategoryData = async () => {
+        try {
+            const params = { types: 'ITEM', cursor: cursor, limit: limit }
+            const response = await catalogItems(params);
+            if (response?.status === 200) {
+                if (response?.data?.cursor) {
+                    setCursor(response?.data?.cursor)
+                } else {
+                    const currentTimePlusFiveMinutes = dayjs().add(1, 'day').toDate();
+                    setDataInLocalStorage('DatePage2', currentTimePlusFiveMinutes);
+                    setCursor('')
+                }
+                const itemData = [...catalogCategoryAndItem, ...response?.data?.objects];
+                setDataInLocalStorage('CatalogItemsData', itemData)
+
+                setCatalogCategoryAndItem(itemData);
+
             }
 
 
@@ -508,6 +536,14 @@ const OurMenu = () => {
         }
 
     }, []);
+
+    useEffect(() => {
+        const dateData: Dayjs | null = getDataFromLocalStorage('DatePage2');
+        if (cursor && ((dayjs(dateData).isSame() || dayjs(dateData).isBefore()) || !dateData)) {
+            getMoreCatalofItemAndCategoryData()
+        }
+
+    }, [cursor])
 
     useEffect(() => {
 
