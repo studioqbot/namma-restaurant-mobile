@@ -320,7 +320,7 @@ const NammaSpecials = () => {
 
         setNammaSpecialItemsData(response?.data?.items);
         setDataInLocalStorage('NammaSpecialItemsData', response?.data?.items);
-        const currentTimePlusOneWeek = dayjs().add(1, 'week').toDate();
+        const currentTimePlusOneWeek = dayjs().add(1, 'day').toDate();
         setDataInLocalStorage('DateHome', currentTimePlusOneWeek);
       }
 
@@ -338,7 +338,7 @@ const NammaSpecials = () => {
       if (response?.status === 200) {
         setImageData(response?.data?.objects);
         setDataInLocalStorage('ImageData', response?.data?.objects);
-        const currentTimePlusOneWeek = dayjs().add(1, 'week').toDate();
+        const currentTimePlusOneWeek = dayjs().add(1, 'day').toDate();
         setDataInLocalStorage('DateHome', currentTimePlusOneWeek);
       }
 
@@ -354,7 +354,7 @@ const NammaSpecials = () => {
       if (response?.status === 200) {
         setDataInLocalStorage('ModifierListData', response?.data?.objects);
         setMofierList(response?.data?.objects);
-        const currentTimePlusOneWeek = dayjs().add(1, 'week').toDate();
+        const currentTimePlusOneWeek = dayjs().add(1, 'day').toDate();
         setDataInLocalStorage('DateHome', currentTimePlusOneWeek);
       };
 

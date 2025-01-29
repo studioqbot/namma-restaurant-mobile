@@ -49,7 +49,7 @@ const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsI
             if (items) {
                 items.quantity = String(count + 1);
                 return prevData;
-            }
+            };
             return prevData
         });
 
@@ -72,7 +72,7 @@ const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem, setIsI
             });
         }
 
-    }
+    };
 
 
     const handleCountDecrement = (quantityVal: string | undefined) => {
@@ -279,7 +279,9 @@ const OurMenu = () => {
     const [isItemAdded, setIsItemAdded] = useState(false);
     const [loading, setLoading] = useState(false);
     const [modifierIds, setModifierIds] = useState<ModifierIds[]>([]);
+    const [catalogCategoryAndItemCopy, setCatalogCategoryAndItemCopy] = useState<CatalogItemsType[]>([]);
     const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
+    const [searchValue, setSearchValue] = useState('');
 
     const getModifierListData = async () => {
         try {
@@ -301,6 +303,8 @@ const OurMenu = () => {
             const response = await catalogItems(params);
             if (response?.status === 200) {
                 setDataInLocalStorage('CatalogCategoryData', response?.data?.objects);
+                const currentTimePlusFiveMinutes = dayjs().add(1, 'day').toDate();
+                setDataInLocalStorage('Date', currentTimePlusFiveMinutes)
                 setCatalogCategory(response?.data?.objects);
                 setCatalogCategoryTab(response?.data?.objects);
             }
@@ -316,11 +320,12 @@ const OurMenu = () => {
             const response = await catalogItems(params);
             if (response?.status === 200) {
                 setDataInLocalStorage('CatalogItemsData', response?.data?.objects)
-                const currentTimePlusFiveMinutes = dayjs().add(1, 'week').toDate();
+                const currentTimePlusFiveMinutes = dayjs().add(1, 'day').toDate();
 
                 setDataInLocalStorage('Date', currentTimePlusFiveMinutes)
 
-                setCatalogCategoryAndItem(response?.data?.objects)
+                setCatalogCategoryAndItem(response?.data?.objects);
+                setCatalogCategoryAndItemCopy(response?.data?.objects);
             }
 
 
@@ -331,10 +336,11 @@ const OurMenu = () => {
     };
 
     const handleCategoryTabs = async (categoryItem: CategoryDataType) => {
-
+        setSearchValue('');
         setCatalogCategory([
             categoryItem
         ]);
+        setCatalogCategoryAndItem([...catalogCategoryAndItemCopy])
         closeMenuModal()
 
     };
@@ -347,6 +353,7 @@ const OurMenu = () => {
 
         if (itemAndCategoryData && itemAndCategoryData?.length) {
             setCatalogCategoryAndItem(itemAndCategoryData)
+            setCatalogCategoryAndItemCopy(itemAndCategoryData)
 
         }
         if (categoryData && categoryData?.length) {
@@ -362,7 +369,7 @@ const OurMenu = () => {
 
     const handleSearchItemsChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const searchText = event.target.value;
-
+        setSearchValue(searchText)
         if (timeoutId) {
             clearTimeout(timeoutId);
         }
@@ -565,6 +572,7 @@ const OurMenu = () => {
                 <div className='w-[100%] pr-[8px] relative'>
                     <input
                         type="text"
+                        value={searchValue}
                         onChange={handleSearchItemsChange}
                         className="w-full py-[10px] px-[15px] text-[14px] text-[#222A4A] border border-[#450A08] rounded-[100px] outline-0 bg-[#F9F2EA] pr-[50px]"
                     />
@@ -589,7 +597,9 @@ const OurMenu = () => {
                     >
                         <div className="w-full flex flex-col items-start justify-center text-[#222A4A] text-[17px] gap-[30px]">
                             <span onClick={() => {
+                                setSearchValue('');
                                 setCatalogCategory([...catalogCategoryTab]);
+                                setCatalogCategoryAndItem([...catalogCategoryAndItemCopy])
                                 closeMenuModal()
 
                             }}>All</span>
