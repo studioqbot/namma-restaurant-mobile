@@ -353,6 +353,9 @@ const OurMenu = () => {
                 setDataInLocalStorage('CatalogItemsData', itemData)
 
                 setCatalogCategoryAndItem(itemData);
+                setCatalogCategoryAndItemCopy((prevData) => {
+                    return [...prevData , ...response?.data?.objects]
+                })
 
             }
 
