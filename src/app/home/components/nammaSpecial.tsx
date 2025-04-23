@@ -192,8 +192,8 @@ const NammaSpecialCard = (props: NammaSpecialCardProps) => {
     <div className="flex flex-col items-center rounded-lg text-center">
       <div className="relative overflow-hidden mb-4">
         {/* <img src={image?.image_data?.url ? image?.image_data?.url : '#'} alt="card-img" className="w-[163px] h-[163px] rounded-[15px]" /> */}
-        {image?.image_data?.url ? <img src={image?.image_data?.url ? image?.image_data?.url : '#'} alt="card-img" className="w-[163px] h-[163px] rounded-[15px]" /> :
-          <Image src={placeHolder} alt="card-img" className="w-[163px] h-[163px] rounded-[15px]" />}
+        {image?.image_data?.url ? <img src={image?.image_data?.url ? image?.image_data?.url : '#'} alt="card-img" className="w-[163px] h-[163px] rounded-[15px] object-cover" /> :
+          <Image src={placeHolder} alt="card-img" className="w-[163px] h-[163px] rounded-[15px] object-cover" />}
       </div>
 
       <h3 className="text-[14px] text-[#222A4A] font-medium px-[28px]">{data?.item_data?.name}</h3>
