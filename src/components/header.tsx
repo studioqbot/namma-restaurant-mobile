@@ -151,6 +151,9 @@ function Header() {
             <Link href="/" onClick={toggleDrawer}>Home</Link>
           </li>
           <li>
+            <Link href="/about-us" onClick={toggleDrawer}>About Us</Link>
+          </li>
+          <li>
             <Link href="/our-menu" onClick={toggleDrawer}>Our Menu</Link>
           </li>
           <li>
@@ -158,6 +161,14 @@ function Header() {
           </li>
           <li>
             <Link href="/contact-us" onClick={toggleDrawer}>Contact Us</Link>
+          </li>
+          <li>
+          <a
+            href="tel:408-649-3417"
+            className="inline-block px-5 py-2 bg-[#A02621] text-white font-semibold rounded mt-1 uppercase"
+          >
+            Order Online
+          </a>
           </li>
         </ul>
       </div>
