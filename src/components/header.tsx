@@ -1,6 +1,6 @@
 'use client'
 import React, { useContext, useEffect, useState } from 'react';
-import Image from "next/image";
+
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import GlobalContext from '@/constants/global-context';
@@ -9,7 +9,7 @@ import dayjs from 'dayjs';
 function Header() {
 
   const router = useRouter();
-  const { cartItemCount, setIsOrderUpdate, isOrderUpdate, lineItems, setIsCartOpen ,isCartOpen} = useContext(GlobalContext);
+  const { setIsCartOpen} = useContext(GlobalContext);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const operationalHours: { [key: string]: { open: string; close: string }[] } = {

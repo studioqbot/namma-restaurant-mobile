@@ -1,7 +1,7 @@
 'use client';
 import Loader from '@/components/loder';
 import GlobalContext from '@/constants/global-context';
-import { CatalogItemsType, CategoryDataType, LineItemsType, ModifierDataType, ModifierIds, ModifierType, OrderCreateBody, OrderUpdateBodyAdd } from '@/constants/types';
+import { CatalogItemsType, CategoryDataType, LineItemsType, ModifierDataType, ModifierIds, OrderCreateBody, OrderUpdateBodyAdd } from '@/constants/types';
 import { catalogItems, catalogSearchApi, orderCreateApi, orderUpdateApi } from '@/services/apiServices';
 import { getDataFromLocalStorage, isEmptyObj, removeItemFrmLocalStorage, setDataInLocalStorage } from '@/utils/genericUtilties';
 import dayjs, { Dayjs } from 'dayjs';
@@ -19,15 +19,13 @@ interface OurMenuItemsType {
     setFieldToClear: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
-const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem }: OurMenuItemsType) => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [modifierListData, setModifierListData] = useState<ModifierType[] | undefined>([]);
-    const [selectedOption, setSelectedOption] = useState<string>('');
+const OurMenuItems = ({ data, lineItems }: OurMenuItemsType) => {
 
 
 
-    const [isAdded, setIsAdded] = useState(false);
-    const { isOrderUpdate, orderDetails, isCartOpen } = useContext(GlobalContext);
+
+    const [isAdded] = useState(false);
+    const { orderDetails, isCartOpen } = useContext(GlobalContext);
 
     const matchedItem = useMemo(() => {
         return orderDetails?.line_items?.find(
@@ -35,29 +33,6 @@ const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem }: OurM
         );
     }, [lineItems, data]);
 
-    const handleCheckboxChange = (modifierName: string, modifierId: string) => {
-        setSelectedOption(modifierName);
-        setLineItems((prevData: LineItemsType[]) => {
-            const addModifier = prevData?.find((item) => item.catalog_object_id === data?.item_data?.variations[0]?.id);
-            if (addModifier) {
-                addModifier.modifiers = [{ catalog_object_id: modifierId }]
-            }
-            return prevData
-        }
-        );
-
-        if (isOrderUpdate && isOrderUpdate !== 'create') {
-            setUpdateLineItem((prevData: LineItemsType[]) => {
-                const addModifier = prevData?.find((item) => item.catalog_object_id === data?.item_data?.variations[0]?.id);
-                if (addModifier) {
-                    addModifier.modifiers = [{ catalog_object_id: modifierId }]
-                }
-                return prevData
-            }
-
-            );
-        }
-    };
 
     return (
         <>
@@ -198,7 +173,7 @@ const OurMenu = () => {
         }
     };
 
-    const handleCategoryTabs = async (categoryItem: CategoryDataType) => {
+    const handleCategoryTabs = async () => {
         setSearchValue('');
         // setCatalogCategory([
         //     categoryItem
