@@ -69,7 +69,7 @@ const NammaSpecialCard = (props: NammaSpecialCardProps) => {
           ${data?.item_data?.variations[0]?.item_variation_data?.price_money?.amount / 100}
         </span>
       </div>
-      <h3 className="text-[16px] text-[#222A4A] font-medium px-[28px] transition-opacity duration-500 ease-in-out pt-[2px]">{data?.item_data?.name} dfdf</h3>
+      <h3 className="text-[16px] text-[#222A4A] font-medium px-[28px] transition-opacity duration-500 ease-in-out pt-[2px]">{data?.item_data?.name}</h3>
       <div className="flex flex-col items-center justify-between mt-auto">
         <span className="text-[16px] text-[#222A4A] font-bold mt-[15px] transition-opacity duration-500 ease-in-out">
           ${data?.item_data?.variations[0]?.item_variation_data?.price_money?.amount / 100}

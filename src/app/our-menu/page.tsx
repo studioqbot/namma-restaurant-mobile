@@ -63,7 +63,7 @@ const OurMenuItems = ({ data, setLineItems, lineItems, setUpdateLineItem }: OurM
         <>
             <div className="flex items-center justify-between py-2 relative w-full">
                 <div className='flex flex-col font-semibold flex-[3] '>
-                    <span className="bg-[#eee1d1] text-[16px] text-[#222A4A] pr-[10px]">{data?.item_data?.name} dfd</span>
+                    <span className="bg-[#eee1d1] text-[16px] text-[#222A4A] pr-[10px]">{data?.item_data?.name}</span>
                     {/* <span className="bg-[#eee1d1] text-[16px] text-[#222A4A] font-normal">${data?.item_data?.variations[0]?.item_variation_data?.price_money?.amount / 100}</span> */}
                 </div>
                 <div className="flex items-center justify-end bg-[#eee1d1] gap-4 pl-[11px] flex-1">
@@ -138,7 +138,7 @@ const OurMenu = () => {
                 setDataInLocalStorage('CatalogCategoryData', response?.data?.objects);
                 const currentTimePlusFiveMinutes = dayjs().add(1, 'day').toDate();
                 setDataInLocalStorage('Date', currentTimePlusFiveMinutes)
-                setCatalogCategory(response?.data?.objects);
+                // setCatalogCategory(response?.data?.objects);
                 setCatalogCategoryTab(response?.data?.objects);
             }
 
@@ -200,9 +200,9 @@ const OurMenu = () => {
 
     const handleCategoryTabs = async (categoryItem: CategoryDataType) => {
         setSearchValue('');
-        setCatalogCategory([
-            categoryItem
-        ]);
+        // setCatalogCategory([
+        //     categoryItem
+        // ]);
         setCatalogCategoryAndItem([...catalogCategoryAndItemCopy])
         closeMenuModal()
 
@@ -219,10 +219,22 @@ const OurMenu = () => {
             setCatalogCategoryAndItemCopy(itemAndCategoryData)
 
         }
-        if (categoryData && categoryData?.length) {
-            setCatalogCategory(categoryData);
-            setCatalogCategoryTab(categoryData);
-        }
+ if (categoryData && categoryData.length) {
+  const uniqueByName = new Map<string, CategoryDataType>();
+
+  categoryData.forEach((cat: CategoryDataType) => {
+    const name = cat?.category_data?.name?.trim().toLowerCase();
+    if (name && !uniqueByName.has(name)) {
+      uniqueByName.set(name, cat);
+    }
+  });
+
+  const uniqueCategories = Array.from(uniqueByName.values());
+
+  setCatalogCategory(uniqueCategories);
+  setCatalogCategoryTab(uniqueCategories);
+}
+
         if (modifierData && modifierData?.length) {
 
             setMofierList(modifierData);
