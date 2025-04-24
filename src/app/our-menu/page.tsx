@@ -3,7 +3,7 @@ import Loader from '@/components/loder';
 import GlobalContext from '@/constants/global-context';
 import { CatalogItemsType, CategoryDataType, LineItemsType, ModifierDataType, ModifierIds, OrderCreateBody, OrderUpdateBodyAdd } from '@/constants/types';
 import { catalogItems, catalogSearchApi, orderCreateApi, orderUpdateApi } from '@/services/apiServices';
-import { getDataFromLocalStorage, isEmptyObj, removeItemFrmLocalStorage, setDataInLocalStorage } from '@/utils/genericUtilties';
+import { getDataFromLocalStorage, removeItemFrmLocalStorage, setDataInLocalStorage } from '@/utils/genericUtilties';
 import dayjs, { Dayjs } from 'dayjs';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 interface OurMenuItemsType {
@@ -19,19 +19,13 @@ interface OurMenuItemsType {
     setFieldToClear: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
-const OurMenuItems = ({ data, lineItems }: OurMenuItemsType) => {
+const OurMenuItems = ({ data }: OurMenuItemsType) => {
 
 
 
 
-    const [isAdded] = useState(false);
-    const { orderDetails, isCartOpen } = useContext(GlobalContext);
 
-    const matchedItem = useMemo(() => {
-        return orderDetails?.line_items?.find(
-            (dataItem: LineItemsType) => dataItem?.catalog_object_id === data?.item_data?.variations[0]?.id
-        );
-    }, [lineItems, data]);
+
 
 
     return (
