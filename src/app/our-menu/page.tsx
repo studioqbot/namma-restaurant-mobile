@@ -26,19 +26,17 @@ const OurMenuItems = ({ data }: OurMenuItemsType) => {
 
 
 
-
-
     return (
         <>
             <div className="flex items-center py-2 w-full">
-  <span className="text-[16px] text-[#222A4A] font-semibold whitespace-nowrap">
-    {data?.item_data?.name}
-  </span>
-  <div className="flex-grow border-b border-dotted border-[#222A4A] mx-2" />
-  <span className="text-[16px] text-[#222A4A] font-normal whitespace-nowrap">
-    ${(data?.item_data?.variations[0]?.item_variation_data?.price_money?.amount || 0) / 100}
-  </span>
-</div>
+                <span className="text-[16px] text-[#222A4A] font-semibold whitespace-nowrap">
+                    {data?.item_data?.name}
+                </span>
+                <div className="flex-grow border-b border-dotted border-[#222A4A] mx-2" />
+                <span className="text-[16px] text-[#222A4A] font-normal whitespace-nowrap">
+                    ${(data?.item_data?.variations[0]?.item_variation_data?.price_money?.amount || 0) / 100}
+                </span>
+            </div>
 
         </>
     );
@@ -46,7 +44,7 @@ const OurMenuItems = ({ data }: OurMenuItemsType) => {
 
 const OurMenu = () => {
 
-    const { setCatalogCategory, setCatalogCategoryAndItem, catalogCategory, isOrderUpdate,
+    const { setCatalogCategory, setCatalogCategoryAndItem, catalogCategory, 
         catalogCategoryAndItem, lineItems, updateLineItem, setLineItems, setUpdateLineItem, orderDetails, setIsOrdered, isOrdered,
         setIsOrderUpdate, setOrderDetails, setFieldToRemove, fieldToRemove, catalogCategoryTab, setCatalogCategoryTab, setGlobalLoading } = useContext(GlobalContext);
     const [modifierList, setMofierList] = useState<ModifierDataType[]>([]);
@@ -80,7 +78,7 @@ const OurMenu = () => {
                 setDataInLocalStorage('CatalogCategoryData', response?.data?.objects);
                 const currentTimePlusFiveMinutes = dayjs().add(1, 'day').toDate();
                 setDataInLocalStorage('Date', currentTimePlusFiveMinutes)
-                // setCatalogCategory(response?.data?.objects);
+                setCatalogCategory(response?.data?.objects);
                 setCatalogCategoryTab(response?.data?.objects);
             }
 
@@ -111,40 +109,13 @@ const OurMenu = () => {
         }
     };
 
-    const getMoreCatalofItemAndCategoryData = async () => {
-        try {
-            const params = { types: 'ITEM', cursor: cursor, limit: limit }
-            const response = await catalogItems(params);
-            if (response?.status === 200) {
-                if (response?.data?.cursor) {
-                    setCursor(response?.data?.cursor)
-                } else {
-                    const currentTimePlusFiveMinutes = dayjs().add(1, 'day').toDate();
-                    setDataInLocalStorage('DatePage2', currentTimePlusFiveMinutes);
-                    setCursor('')
-                }
-                const itemData = [...catalogCategoryAndItem, ...response?.data?.objects];
-                setDataInLocalStorage('CatalogItemsData', itemData)
-
-                setCatalogCategoryAndItem(itemData);
-                setCatalogCategoryAndItemCopy((prevData) => {
-                    return [...prevData, ...response?.data?.objects]
-                })
-
-            }
 
 
-        } catch (error) {
-            console.log('Error', error);
-
-        }
-    };
-
-    const handleCategoryTabs = async () => {
+    const handleCategoryTabs = async (categoryItem: CategoryDataType) => {
         setSearchValue('');
-        // setCatalogCategory([
-        //     categoryItem
-        // ]);
+        setCatalogCategory([
+            categoryItem
+        ]);
         setCatalogCategoryAndItem([...catalogCategoryAndItemCopy])
         closeMenuModal()
 
@@ -326,23 +297,9 @@ const OurMenu = () => {
 
     }, []);
 
-    useEffect(() => {
-        const dateData: Dayjs | null = getDataFromLocalStorage('DatePage2');
-        if (cursor && ((dayjs(dateData).isSame() || dayjs(dateData).isBefore()) || !dateData)) {
-            getMoreCatalofItemAndCategoryData()
-        }
 
-    }, [cursor])
 
-    useEffect(() => {
 
-        if ((isOrderUpdate === 'create')) {
-            orderCreate();
-        } else if ((isOrderUpdate && isItemAdded)) {
-            orderUpdate();
-        }
-
-    }, [isOrderUpdate]);
 
 
     useEffect(() => {
