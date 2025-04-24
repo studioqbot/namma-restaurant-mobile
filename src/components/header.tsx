@@ -9,7 +9,7 @@ import dayjs from 'dayjs';
 function Header() {
 
   const router = useRouter();
-  const { setIsCartOpen} = useContext(GlobalContext);
+  const { setIsCartOpen } = useContext(GlobalContext);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const operationalHours: { [key: string]: { open: string; close: string }[] } = {
@@ -17,7 +17,7 @@ function Header() {
       { open: "11:30", close: "15:00" },
       { open: "17:30", close: "21:30" },
     ],
-    Tue: [], 
+    Tue: [],
     Wed: [
       { open: "11:30", close: "15:00" },
       { open: "17:30", close: "22:00" },
@@ -42,15 +42,16 @@ function Header() {
 
   useEffect(() => {
     const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent);
-    if (!isMobileDevice) { 
-      window.location.href = 'https://namma-restaurant-web-q78v.vercel.app/';
+    const redirectUrl = process.env.NEXT_PUBLIC_APP_WEB_URL;
 
+    if (!isMobileDevice && redirectUrl) {
+      window.location.href = redirectUrl;
     }
 
     const checkIfOpen = () => {
       const now = dayjs();
-      const currentDay = now.format("ddd"); 
-      const currentTime = now.format("HH:mm"); 
+      const currentDay = now.format("ddd");
+      const currentTime = now.format("HH:mm");
 
       const todayHours = operationalHours[currentDay] || [];
 
@@ -73,8 +74,8 @@ function Header() {
     return () => clearInterval(interval);
   }, []);
 
-  
-  
+
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -95,7 +96,7 @@ function Header() {
     setIsDrawerOpen(!isDrawerOpen);
   };
 
-  
+
 
   return (
     <header className='w-full py-[10px] header-container'>
@@ -118,7 +119,7 @@ function Header() {
               <span className="block w-[25px] h-[3px] bg-[#222A4A]"></span>
             </button>
             {/* Cart */}
-        
+
           </div>
         </nav>
       </div>
@@ -145,18 +146,18 @@ function Header() {
             <Link href="/our-menu" onClick={toggleDrawer}>Our Menu</Link>
           </li>
           <li>
-          <Link href="https://www.google.com/maps?q=181+Ranch+Dr,+Milpitas+95035" target='_blank'>Location</Link>
+            <Link href="https://www.google.com/maps?q=181+Ranch+Dr,+Milpitas+95035" target='_blank'>Location</Link>
           </li>
           <li>
             <Link href="/contact-us" onClick={toggleDrawer}>Contact Us</Link>
           </li>
           <li>
-          <a
-            href="tel:408-649-3417"
-            className="inline-block px-5 py-2 bg-[#A02621] text-white font-semibold rounded mt-1 uppercase"
-          >
-            Order Online
-          </a>
+            <a
+              href="tel:408-649-3417"
+              className="inline-block px-5 py-2 bg-[#A02621] text-white font-semibold rounded mt-1 uppercase"
+            >
+              Order Online
+            </a>
           </li>
         </ul>
       </div>
