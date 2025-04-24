@@ -5,7 +5,7 @@ import { CatalogItemsType, CategoryDataType, LineItemsType, ModifierDataType, Mo
 import { catalogItems, catalogSearchApi, orderCreateApi, orderUpdateApi } from '@/services/apiServices';
 import { getDataFromLocalStorage, removeItemFrmLocalStorage, setDataInLocalStorage } from '@/utils/genericUtilties';
 import dayjs, { Dayjs } from 'dayjs';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 interface OurMenuItemsType {
     data: CatalogItemsType;
     setLineItems: React.Dispatch<React.SetStateAction<LineItemsType[]>>;
