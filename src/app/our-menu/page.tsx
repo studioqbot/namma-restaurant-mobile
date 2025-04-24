@@ -12,7 +12,7 @@ interface OurMenuItemsType {
     lineItems: LineItemsType[];
     setUpdateLineItem: React.Dispatch<React.SetStateAction<LineItemsType[]>>;
     updateLineItem: LineItemsType[];
- 
+
     modifierList: ModifierDataType[];
     modifierIds: ModifierIds[];
     setModifierIds: React.Dispatch<React.SetStateAction<ModifierIds[]>>;
@@ -30,7 +30,7 @@ const OurMenuItems = ({ data }: OurMenuItemsType) => {
         <>
             <div className="flex items-center py-2 w-full">
                 <span className="text-[16px] text-[#222A4A] font-semibold whitespace-nowrap">
-                    {data?.item_data?.name}
+                    {data?.item_data?.name}ddd
                 </span>
                 <div className="flex-grow border-b border-dotted border-[#222A4A] mx-2" />
                 <span className="text-[16px] text-[#222A4A] font-normal whitespace-nowrap">
@@ -44,18 +44,18 @@ const OurMenuItems = ({ data }: OurMenuItemsType) => {
 
 const OurMenu = () => {
 
-    const { setCatalogCategory, setCatalogCategoryAndItem, catalogCategory, 
-        catalogCategoryAndItem, lineItems, updateLineItem, setLineItems, setUpdateLineItem, 
+    const { setCatalogCategory, setCatalogCategoryAndItem, catalogCategory,
+        catalogCategoryAndItem, lineItems, updateLineItem, setLineItems, setUpdateLineItem,
         setFieldToRemove, catalogCategoryTab, setCatalogCategoryTab } = useContext(GlobalContext);
     const [modifierList, setMofierList] = useState<ModifierDataType[]>([]);
-  
+
     const [loading, setLoading] = useState(false);
     const [modifierIds, setModifierIds] = useState<ModifierIds[]>([]);
     const [catalogCategoryAndItemCopy, setCatalogCategoryAndItemCopy] = useState<CatalogItemsType[]>([]);
     const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
     const [searchValue, setSearchValue] = useState('');
-   
-   
+
+
     const getModifierListData = async () => {
         try {
             const params = { types: 'MODIFIER_LIST' }
@@ -92,7 +92,7 @@ const OurMenu = () => {
             const params = { types: 'ITEM' }
             const response = await catalogItems(params);
             if (response?.status === 200) {
-            
+
                 setDataInLocalStorage('CatalogItemsData', response?.data?.objects)
                 const currentTimePlusFiveMinutes = dayjs().add(1, 'day').toDate();
 
@@ -211,7 +211,7 @@ const OurMenu = () => {
 
     }
 
- 
+
 
     useEffect(() => {
         const dateData: Dayjs | null = getDataFromLocalStorage('Date');
@@ -253,35 +253,39 @@ const OurMenu = () => {
                     <span className="absolute top-0 left-0 w-full h-[4px] border-t-[0.5px] border-b-[0.5px] border-[#222A4A]" />
                     <span className='text-[#A02621] text-[27px] leading-[31px] font-semibold font-unbounded bg-[#eee1d1] absolute pr-[10px] top-[-14px] left-0'>Our Menu</span>
                 </div>
-                {(catalogCategory && catalogCategory?.length > 0) && catalogCategory?.map((category, index) => {
-                    const catalogItems = catalogCategoryAndItem?.filter((itemData: CatalogItemsType) => {
-                        return itemData?.item_data?.category_id === category?.id;
-                    });
-                    return <div key={index} className="w-full">
-                        <div className="my-[25px] w-full float-left">
-                            <h2 className="text-[23px] font-medium bg-[#eee1d1] font-unbounded text-[#222A4A]">
-                                {category?.category_data?.name}
-                            </h2>
-                            <div className="space-y-2">
-                                {(catalogItems && catalogItems?.length > 0) && catalogItems?.map((item) => (
-                                    <OurMenuItems
-                                        key={item?.id}
-                                        data={item}
-                                        lineItems={lineItems}
-                                        setLineItems={setLineItems}
-                                        setUpdateLineItem={setUpdateLineItem}
-                                        updateLineItem={updateLineItem}
-                                       
-                                        modifierList={modifierList}
-                                        modifierIds={modifierIds}
-                                        setModifierIds={setModifierIds}
-                                        setFieldToClear={setFieldToRemove}
-                                    />
-                                ))}
+                {[...new Map(catalogCategory.map(cat => [cat?.category_data?.name?.trim().toLowerCase(), cat])).values()]
+                    .map((category, index) => {
+                        const catalogItems = catalogCategoryAndItem?.filter((itemData: CatalogItemsType) => {
+                            return itemData?.item_data?.category_id === category?.id;
+                        });
+
+                        return (
+                            <div key={index} className="w-full">
+                                <div className="my-[25px] w-full float-left">
+                                    <h2 className="text-[23px] font-medium bg-[#eee1d1] font-unbounded text-[#222A4A]">
+                                        {category?.category_data?.name}
+                                    </h2>
+                                    <div className="space-y-2">
+                                        {(catalogItems && catalogItems?.length > 0) && catalogItems?.map((item) => (
+                                            <OurMenuItems
+                                                key={item?.id}
+                                                data={item}
+                                                lineItems={lineItems}
+                                                setLineItems={setLineItems}
+                                                setUpdateLineItem={setUpdateLineItem}
+                                                updateLineItem={updateLineItem}
+                                                modifierList={modifierList}
+                                                modifierIds={modifierIds}
+                                                setModifierIds={setModifierIds}
+                                                setFieldToClear={setFieldToRemove}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                })}
+                        );
+                    })}
+
             </div>
             {/* Menu Search */}
             <div className='w-full flex fixed bottom-0 justify-between p-[20px] left-0 right-0 z-10'>
