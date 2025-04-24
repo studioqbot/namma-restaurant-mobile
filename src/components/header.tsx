@@ -154,9 +154,9 @@ function Header() {
           <li>
             <a
               href="tel:408-649-3417"
-              className="inline-block px-5 py-2 bg-[#A02621] text-white font-semibold rounded mt-1 uppercase"
+              className="inline-block px-5 py-2 bg-[#A02621] text-white font-semibold rounded mt-1"
             >
-              Order Online
+             Call to Order 
             </a>
           </li>
         </ul>
