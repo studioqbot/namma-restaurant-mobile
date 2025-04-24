@@ -30,7 +30,7 @@ const OurMenuItems = ({ data }: OurMenuItemsType) => {
         <>
             <div className="flex items-center py-2 w-full">
                 <span className="text-[16px] text-[#222A4A] font-semibold whitespace-nowrap">
-                    {data?.item_data?.name}ddd
+                    {data?.item_data?.name}
                 </span>
                 <div className="flex-grow border-b border-dotted border-[#222A4A] mx-2" />
                 <span className="text-[16px] text-[#222A4A] font-normal whitespace-nowrap">
