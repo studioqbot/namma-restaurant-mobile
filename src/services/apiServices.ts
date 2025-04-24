@@ -1,11 +1,7 @@
 import axiosInstance from "@/utils/axiosConfig"
 import API_ENDPOINTS from "./apiPaths"
-// import { CatelogFilterBody } from "@/app/home/page";
 import { CatalogSearchBody, OrderCreateBody, OrderUpdateBodyAdd, PaymentBodyType } from "@/constants/types";
 import { CatelogFilterBody } from "@/app/home/components/nammaSpecial";
-// import { OrderUpdateBody } from "@/app/cart/page";
-
-
 
 export const nammaSpecialItems = (body: CatelogFilterBody) => {
     return axiosInstance.post(`${API_ENDPOINTS.catlogFilterItems}`, body);

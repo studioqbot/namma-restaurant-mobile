@@ -118,19 +118,7 @@ function Header() {
               <span className="block w-[25px] h-[3px] bg-[#222A4A]"></span>
             </button>
             {/* Cart */}
-           {/* {isCartOpen&& <div className="relative">
-              <button className="bg-[#FFC300] p-[10px] rounded-full" disabled={lineItems.length===0 ? true :false}  onClick={() => {
-                if (!isOrderUpdate) {
-                  setIsOrderUpdate('create');
-                } else {
-                  setIsOrderUpdate('update');
-                }
-                router.push('/cart')
-              }}>
-                <Image src="/assets/images/cart-icon.svg" alt="Cart" width={20} height={20} />
-              </button>
-              <span className="absolute w-[20px] h-[20px] bg-[#9E241F] text-[#fff] text-[12px] font-bold rounded-full flex items-center justify-center top-[-5px] right-[-5px]">{cartItemCount}</span>
-            </div>} */}
+        
           </div>
         </nav>
       </div>
