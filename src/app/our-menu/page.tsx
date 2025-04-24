@@ -36,42 +36,15 @@ const OurMenuItems = ({ data, lineItems }: OurMenuItemsType) => {
 
     return (
         <>
-            <div className="flex items-center justify-between py-2 relative w-full">
-                <div className='flex flex-col font-semibold flex-[3] '>
-                    <span className="bg-[#eee1d1] text-[16px] text-[#222A4A] pr-[10px]">{data?.item_data?.name}</span>
-                    {/* <span className="bg-[#eee1d1] text-[16px] text-[#222A4A] font-normal">${data?.item_data?.variations[0]?.item_variation_data?.price_money?.amount / 100}</span> */}
-                </div>
-                <div className="flex items-center justify-end bg-[#eee1d1] gap-4 pl-[11px] flex-1">
-
-                    {isCartOpen && <> {(isAdded || (matchedItem && !isEmptyObj(matchedItem))) ? <div className="flex items-center min-w-[100px] border border-[#A02621] rounded-[100px] overflow-hidden text-[#A02621] text-[15px]">
-                        {/* <button
-                            onClick={() => handleCountDecrement(matchedItem?.quantity)}
-                            className="px-3 py-1 text-[#A02621] hover:bg-gray-100"
-                        >
-                            -
-                        </button>
-                        <span className="px-3 py-1 text-[#A02621]">
-                            {matchedItem ? matchedItem?.quantity : quantity}
-                        </span>
-                        <button
-                            onClick={() => {
-                                handleCountIncrement(matchedItem?.quantity)
-                            }}
-                            className="px-3 py-1 text-[#A02621] hover:bg-gray-100"
-                        >
-                            +
-                        </button> */}
-                    </div> : <button
-                        // onClick={handleAddClick}
-                        className="py-[4px] min-w-[100px] border border-[#A02621] rounded-[100px] overflow-hidden text-[#A02621] text-[15px]"
-                    >
-                        ${data?.item_data?.variations[0]?.item_variation_data?.price_money?.amount / 100}
-                    </button>}
-                    </>}
-                </div>
-             
-            </div>
-
+            <div className="flex items-center py-2 w-full">
+  <span className="text-[16px] text-[#222A4A] font-semibold whitespace-nowrap">
+    {data?.item_data?.name}
+  </span>
+  <div className="flex-grow border-b border-dotted border-[#222A4A] mx-2" />
+  <span className="text-[16px] text-[#222A4A] font-normal whitespace-nowrap">
+    ${(data?.item_data?.variations[0]?.item_variation_data?.price_money?.amount || 0) / 100}
+  </span>
+</div>
 
         </>
     );
@@ -194,21 +167,21 @@ const OurMenu = () => {
             setCatalogCategoryAndItemCopy(itemAndCategoryData)
 
         }
- if (categoryData && categoryData.length) {
-  const uniqueByName = new Map<string, CategoryDataType>();
+        if (categoryData && categoryData.length) {
+            const uniqueByName = new Map<string, CategoryDataType>();
 
-  categoryData.forEach((cat: CategoryDataType) => {
-    const name = cat?.category_data?.name?.trim().toLowerCase();
-    if (name && !uniqueByName.has(name)) {
-      uniqueByName.set(name, cat);
-    }
-  });
+            categoryData.forEach((cat: CategoryDataType) => {
+                const name = cat?.category_data?.name?.trim().toLowerCase();
+                if (name && !uniqueByName.has(name)) {
+                    uniqueByName.set(name, cat);
+                }
+            });
 
-  const uniqueCategories = Array.from(uniqueByName.values());
+            const uniqueCategories = Array.from(uniqueByName.values());
 
-  setCatalogCategory(uniqueCategories);
-  setCatalogCategoryTab(uniqueCategories);
-}
+            setCatalogCategory(uniqueCategories);
+            setCatalogCategoryTab(uniqueCategories);
+        }
 
         if (modifierData && modifierData?.length) {
 

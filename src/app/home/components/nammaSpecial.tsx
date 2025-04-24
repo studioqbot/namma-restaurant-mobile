@@ -90,7 +90,7 @@ const NammaSpecials = () => {
   const dataLimit = 6;
   const router = useRouter();
 
-  const shuffleArray = (array) => {
+  const shuffleArray = (array: NammaSpecialItems[]) => {
     const shuffledArray = [...array];
     for (let i = shuffledArray.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -183,7 +183,7 @@ const NammaSpecials = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setNammaSpecialItemsData((prevData) => shuffleArray(prevData)); // Shuffle the items every 5 seconds
-    }, 5000);
+    }, 1000 * 120);
 
     return () => clearInterval(intervalId); // Clean up interval on component unmount
   }, []);
