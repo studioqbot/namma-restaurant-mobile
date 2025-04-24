@@ -1,8 +1,8 @@
 'use client';
 import Loader from '@/components/loder';
 import GlobalContext from '@/constants/global-context';
-import { CatalogItemsType, CategoryDataType, LineItemsType, ModifierDataType, ModifierIds, OrderCreateBody, OrderUpdateBodyAdd } from '@/constants/types';
-import { catalogItems, catalogSearchApi, orderCreateApi, orderUpdateApi } from '@/services/apiServices';
+import { CatalogItemsType, CategoryDataType, LineItemsType, ModifierDataType, ModifierIds } from '@/constants/types';
+import { catalogItems, catalogSearchApi } from '@/services/apiServices';
 import { getDataFromLocalStorage, removeItemFrmLocalStorage, setDataInLocalStorage } from '@/utils/genericUtilties';
 import dayjs, { Dayjs } from 'dayjs';
 import React, { useContext, useEffect, useState } from 'react';
@@ -12,7 +12,7 @@ interface OurMenuItemsType {
     lineItems: LineItemsType[];
     setUpdateLineItem: React.Dispatch<React.SetStateAction<LineItemsType[]>>;
     updateLineItem: LineItemsType[];
-    setIsItemAdded: React.Dispatch<React.SetStateAction<boolean>>;
+ 
     modifierList: ModifierDataType[];
     modifierIds: ModifierIds[];
     setModifierIds: React.Dispatch<React.SetStateAction<ModifierIds[]>>;
@@ -45,17 +45,17 @@ const OurMenuItems = ({ data }: OurMenuItemsType) => {
 const OurMenu = () => {
 
     const { setCatalogCategory, setCatalogCategoryAndItem, catalogCategory, 
-        catalogCategoryAndItem, lineItems, updateLineItem, setLineItems, setUpdateLineItem, orderDetails, setIsOrdered, isOrdered,
-        setIsOrderUpdate, setOrderDetails, setFieldToRemove, fieldToRemove, catalogCategoryTab, setCatalogCategoryTab, setGlobalLoading } = useContext(GlobalContext);
+        catalogCategoryAndItem, lineItems, updateLineItem, setLineItems, setUpdateLineItem, 
+        setFieldToRemove, catalogCategoryTab, setCatalogCategoryTab } = useContext(GlobalContext);
     const [modifierList, setMofierList] = useState<ModifierDataType[]>([]);
-    const [isItemAdded, setIsItemAdded] = useState(false);
+  
     const [loading, setLoading] = useState(false);
     const [modifierIds, setModifierIds] = useState<ModifierIds[]>([]);
     const [catalogCategoryAndItemCopy, setCatalogCategoryAndItemCopy] = useState<CatalogItemsType[]>([]);
     const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
     const [searchValue, setSearchValue] = useState('');
-    const [cursor, setCursor] = useState<string>('');
-    const limit = 100;
+   
+   
     const getModifierListData = async () => {
         try {
             const params = { types: 'MODIFIER_LIST' }
@@ -92,7 +92,7 @@ const OurMenu = () => {
             const params = { types: 'ITEM' }
             const response = await catalogItems(params);
             if (response?.status === 200) {
-                setCursor(response?.data?.cursor);
+            
                 setDataInLocalStorage('CatalogItemsData', response?.data?.objects)
                 const currentTimePlusFiveMinutes = dayjs().add(1, 'day').toDate();
 
@@ -211,73 +211,7 @@ const OurMenu = () => {
 
     }
 
-    const orderCreate = async () => {
-        setGlobalLoading(true)
-        const body: OrderCreateBody = {
-            order: {
-                location_id: process.env.NEXT_PUBLIC_LOCATION_ID,
-                line_items: lineItems,
-                modifiers: modifierIds,
-                pricing_options: {
-                    auto_apply_taxes: true,
-                    auto_apply_discounts: true,
-                },
-            }
-        }
-        if (modifierIds?.length > 0) {
-            delete body?.order?.modifiers
-        }
-        try {
-            const response = await orderCreateApi(body);
-            setGlobalLoading(false)
-            if (response?.status === 200) {
-                setIsOrderUpdate('created');
-                setOrderDetails(response?.data?.order);
-                setDataInLocalStorage('OrderId', response?.data?.order?.id)
-                setLineItems(response?.data?.order?.line_items || []);
-                setIsOrdered(!isOrdered);
-
-            };
-
-        } catch (error) {
-            setGlobalLoading(false)
-            console.log('Error', error);
-        };
-    };
-
-    const orderUpdate = async () => {
-        setGlobalLoading(true)
-        const body: OrderUpdateBodyAdd = {
-            fields_to_clear: fieldToRemove,
-            order: {
-                location_id: process.env.NEXT_PUBLIC_LOCATION_ID,
-                line_items: updateLineItem,
-
-                pricing_options: {
-                    auto_apply_taxes: true,
-                    auto_apply_discounts: true,
-                },
-                version: orderDetails?.version
-            }
-        }
-        try {
-            const response = await orderUpdateApi(body, orderDetails?.id)
-            setGlobalLoading(false)
-            if (response?.status === 200) {
-
-                setOrderDetails(response?.data?.order);
-                setLineItems(response?.data?.order?.line_items || []);
-                setIsOrderUpdate('updated');
-                setIsOrdered(!isOrdered);
-            }
-
-        } catch (error) {
-            setGlobalLoading(false)
-            console.log('Error', error);
-        }
-    };
-
-
+ 
 
     useEffect(() => {
         const dateData: Dayjs | null = getDataFromLocalStorage('Date');
@@ -337,7 +271,7 @@ const OurMenu = () => {
                                         setLineItems={setLineItems}
                                         setUpdateLineItem={setUpdateLineItem}
                                         updateLineItem={updateLineItem}
-                                        setIsItemAdded={setIsItemAdded}
+                                       
                                         modifierList={modifierList}
                                         modifierIds={modifierIds}
                                         setModifierIds={setModifierIds}
