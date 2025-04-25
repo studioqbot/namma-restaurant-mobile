@@ -262,7 +262,7 @@ const OurMenu = () => {
                             <div key={index} className="w-full">
                                 <div className="my-[25px] w-full float-left">
                                     <h2 className="text-[23px] font-medium bg-[#eee1d1] font-unbounded text-[#222A4A]">
-                                        {category?.category_data?.name}00
+                                        {category?.category_data?.name}
                                     </h2>
                                     <div className="space-y-2">
                                         {catalogItems.map((item) => (
