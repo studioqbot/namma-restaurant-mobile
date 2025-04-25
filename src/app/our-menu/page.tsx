@@ -21,23 +21,19 @@ interface OurMenuItemsType {
 
 const OurMenuItems = ({ data }: OurMenuItemsType) => {
 
-
-
-
-
-
     return (
         <>
-            <div className="flex items-center py-2 w-full">
-                <span className="text-[16px] text-[#222A4A] font-semibold whitespace-nowrap">
-                    {data?.item_data?.name}
-                </span>
-                <div className="flex-grow border-b border-dotted border-[#222A4A] mx-2" />
-                <span className="text-[16px] text-[#222A4A] font-normal whitespace-nowrap">
-                    ${(data?.item_data?.variations[0]?.item_variation_data?.price_money?.amount || 0) / 100}
-                </span>
-            </div>
-
+            {data?.item_data?.variations[0]?.item_variation_data?.price_money?.amount > 0 &&
+                <div className="flex items-center py-2 w-full">
+                    <span className="text-[16px] text-[#222A4A] font-semibold whitespace-nowrap">
+                        {data?.item_data?.name}
+                    </span>
+                    <div className="flex-grow border-b border-dotted border-[#222A4A] mx-2" />
+                    <span className="text-[16px] text-[#222A4A] font-normal whitespace-nowrap">
+                        ${(data?.item_data?.variations[0]?.item_variation_data?.price_money?.amount) / 100}
+                    </span>
+                </div>
+            }
         </>
     );
 };
@@ -263,7 +259,7 @@ const OurMenu = () => {
                             <div key={index} className="w-full">
                                 <div className="my-[25px] w-full float-left">
                                     <h2 className="text-[23px] font-medium bg-[#eee1d1] font-unbounded text-[#222A4A]">
-                                        {category?.category_data?.name}
+                                        {category?.category_data?.name}00
                                     </h2>
                                     <div className="space-y-2">
                                         {(catalogItems && catalogItems?.length > 0) && catalogItems?.map((item) => (
