@@ -11,9 +11,9 @@ function Banner() {
         <main className='w-full relative pt-[55px]'>
             <Image src="/assets/images/banner-bg.svg" width={'150'} height={'150'} alt="banner-bg" className="w-full absolute top-[50px] z-[-1]" />
             <section className='container'>
-                <section className='grid grid-cols-12 gap-[40px]'>
-                    <div className='col-span-5' style={{ background: 'green' }}>
-                        <div className='w-full py-[70px] pt-[30px] pb-[50px]'>
+                <section className="grid grid-cols-1 lg:grid-cols-12 gap-[40px]">
+                    <div className="col-span-1 lg:col-span-5" style={{ background: 'green' }}>
+                        <div className="w-full py-[70px] pt-[30px] pb-[50px]">
                             <h1 className="text-[32px] leading-[40px] text-[#222A4A] font-unbounded">
                                 Authentic
                                 <br />
@@ -25,26 +25,37 @@ function Banner() {
                                 Experience the rich culinary heritage of South India, crafted with love and served fresh for your takeaway delight.
                             </p>
                             <div className="flex gap-[15px]">
-                                <button className="bg-[#FFC300] px-[32px] py-[11px] rounded-[100px] text-[17px] font-bold text-[#A02621] relative" onClick={() => window.open(
-                                    'https://order.nammarestaurant.com/',
-                                    '_blank',
-                                    'noopener,noreferrer'
-                                )}>Order Now</button>
-                                <button className="bg-transparent border border-[#A02621] px-[32px] py-[11px] rounded-[100px] text-[17px] font-medium text-[#A02621]" onClick={() => router.push('/our-menu')} >Explore Our Menu</button>
+                                <button
+                                    className="bg-[#FFC300] px-[32px] py-[11px] rounded-[100px] text-[17px] font-bold text-[#A02621] relative"
+                                    onClick={() =>
+                                        window.open(
+                                            'https://order.nammarestaurant.com/',
+                                            '_blank',
+                                            'noopener,noreferrer'
+                                        )
+                                    }
+                                >
+                                    Order Now
+                                </button>
+                                <button
+                                    className="bg-transparent border border-[#A02621] px-[32px] py-[11px] rounded-[100px] text-[17px] font-medium text-[#A02621]"
+                                    onClick={() => router.push('/our-menu')}
+                                >
+                                    Explore Our Menu
+                                </button>
                             </div>
                         </div>
-
                     </div>
-
                 </section>
-                <section className='grid grid-cols-12 gap-[40px]'>
-                    <div className='col-span-5' style={{ background: 'green' }}>
-                        <div className='w-full'>
+
+                <section className="grid grid-cols-1 lg:grid-cols-12 gap-[40px]">
+                    <div className="col-span-1 lg:col-span-5" style={{ background: 'green' }}>
+                        <div className="w-full">
                             <ReviewCard />
                         </div>
                     </div>
-
                 </section>
+
             </section>
             <section className='container'>
 
