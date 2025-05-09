@@ -8,11 +8,11 @@ import Image from 'next/image';
 function Banner() {
     const router = useRouter()
     return (
-        <div className='w-full relative pt-[55px]'>
+        <main className='w-full relative pt-[55px]'>
             <Image src="/assets/images/banner-bg.svg" width={'150'} height={'150'} alt="banner-bg" className="w-full absolute top-[50px] z-[-1]" />
-            <div className='container'>
-                <div className='grid grid-cols-12 gap-[40px]'>
-                    <div className='col-span-5'>
+            <section className='container'>
+                <section className='grid grid-cols-12 gap-[40px]'>
+                    <div className='col-span-5' style={{ background: 'green' }}>
                         <div className='w-full py-[70px] pt-[30px] pb-[50px]'>
                             <h1 className="text-[32px] leading-[40px] text-[#222A4A] font-unbounded">
                                 Authentic
@@ -33,20 +33,30 @@ function Banner() {
                                 <button className="bg-transparent border border-[#A02621] px-[32px] py-[11px] rounded-[100px] text-[17px] font-medium text-[#A02621]" onClick={() => router.push('/our-menu')} >Explore Our Menu</button>
                             </div>
                         </div>
+
+                    </div>
+
+                </section>
+                <section className='grid grid-cols-12 gap-[40px]'>
+                    <div className='col-span-5' style={{ background: 'green' }}>
                         <div className='w-full'>
                             <ReviewCard />
                         </div>
                     </div>
-                    <div className='col-span-7'>
-                        <div className='w-full mt-[-100px] pl-[50px]'>
-                            {/* <Image src="/assets/images/hero-slider1.svg" alt="banner-bg" className="w-full" /> */}
-                            <ImageSlider />
-                        </div>
 
+                </section>
+            </section>
+            <section className='container'>
+
+                <div className='col-span-7' style={{ background: 'red' }}>
+                    <div className='w-full mt-[-100px] pl-[50px]'>
+                        {/* <Image src="/assets/images/hero-slider1.svg" alt="banner-bg" className="w-full" /> */}
+                        <ImageSlider />
                     </div>
+
                 </div>
-            </div>
-        </div>
+            </section>
+        </main>
     );
 }
 
