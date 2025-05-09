@@ -17,8 +17,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* --background: #0a0a0a; */
-    --foreground: #ededed;
+    --background: #EEE1D1;
+    /* --foreground: #ededed; */
   }
 }
 
@@ -36,17 +36,4 @@ body {
 /* OverWrite Style */
 .slick-slider div:focus-visible {
   outline: none !important;
-}
-.header-conatiner {
-  transition: all ease .3s;
-}
-
-.sticky-header .header-conatiner{
-  transition: all ease .3s;
-  position: sticky;
-  top: 0;
-  background-color: #fff;
-  z-index: 99;
-  box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.15);
-
 }

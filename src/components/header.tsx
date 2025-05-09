@@ -1,16 +1,17 @@
 'use client'
-import React, { useContext, useEffect, useState } from 'react';
-
+import React, { useContext, useEffect } from 'react';
 import Link from "next/link";
-import { useRouter } from 'next/navigation';
+
 import GlobalContext from '@/constants/global-context';
+import { useRouter } from 'next/navigation';
 import dayjs from 'dayjs';
+import Image from 'next/image';
 
 function Header() {
-
-  const router = useRouter();
+  // const { cartItemCount, setIsOrderUpdate, isOrderUpdate, lineItems, setIsCartOpen ,isCartOpen} = useContext(GlobalContext);
   const { setIsCartOpen } = useContext(GlobalContext);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const router = useRouter()
+
 
   const operationalHours: { [key: string]: { open: string; close: string }[] } = {
     Mon: [
@@ -42,11 +43,12 @@ function Header() {
 
   useEffect(() => {
     const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent);
-    const redirectUrl = process.env.NEXT_PUBLIC_APP_WEB_URL;
+    const redirectUrl = process.env.NEXT_PUBLIC_APP_MOBILE_URL;
 
-    if (!isMobileDevice && redirectUrl) {
+    if (isMobileDevice && redirectUrl) {
       window.location.href = redirectUrl;
     }
+
 
     const checkIfOpen = () => {
       const now = dayjs();
@@ -76,101 +78,33 @@ function Header() {
 
 
 
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 0) {
-        document.body.classList.add('sticky-header');
-      } else {
-        document.body.classList.remove('sticky-header');
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-  };
-
-
-
   return (
-    <header className='w-full py-[10px] header-container'>
-      <div className='container px-4'>
+    <header className='w-full py-[22px]'>
+      <div className='container'>
         <nav className="flex justify-between items-center">
-          {/* Logo */}
-          <div className="flex items-center" onClick={() => router.push('/home')}>
-            <img src="/assets/images/Logo.svg" alt="Logo" className="h-[45px] w-auto" />
-          </div>
-
-          {/* Menu and Cart */}
-          <div className="flex items-center gap-4">
-            {/* Hamburger Menu */}
-            <button
-              className="text-[24px] text-[#222A4A] focus:outline-none"
-              onClick={toggleDrawer}
-            >
-              <span className="block w-[25px] h-[3px] bg-[#222A4A] mb-[4px]"></span>
-              <span className="block w-[25px] h-[3px] bg-[#222A4A] mb-[4px]"></span>
-              <span className="block w-[25px] h-[3px] bg-[#222A4A]"></span>
-            </button>
-            {/* Cart */}
-
+          <button className="flex items-center" onClick={() => router.push('/home')}>
+            {/* <Image src="/assets/images/Logo.svg" alt="Logo" className="h-[60px] w-[auto]" /> */}
+            <Image
+              src="/assets/images/Logo.svg"
+              alt="Logo"
+              width={235}  // Add width
+              height={60}  // Add height for proper aspect ratio
+              className="h-[60px]"
+            />
+          </button>
+          <div className="flex items-center gap-[45px] text-[14px] text-[#222A4A]">
+            <Link href="/" >Home</Link>
+            <Link href="/our-menu" >Our Menu</Link>
+            <Link href="/about-us" >About us</Link>
+            <Link href="https://www.google.com/maps?q=181+Ranch+Dr,+Milpitas+95035" target='_blank'>Location</Link>
+            <Link href="/contact-us" >Contact us</Link>
           </div>
         </nav>
       </div>
-
-      {/* Drawer */}
-      <div
-        className={`fixed top-0 right-0 h-full w-[250px] bg-[#FFF] shadow-lg transform transition-transform z-[9999] ${isDrawerOpen ? 'translate-x-0' : 'translate-x-full'
-          }`}
-      >
-        <button
-          className="text-[24px] text-[#222A4A] absolute top-4 right-4 focus:outline-none"
-          onClick={toggleDrawer}
-        >
-          &times;
-        </button>
-        <ul className="mt-[60px] px-4 space-y-4 text-[#222A4A]">
-          <li>
-            <Link href="/" onClick={toggleDrawer}>Home</Link>
-          </li>
-          <li>
-            <Link href="/about-us" onClick={toggleDrawer}>About Us</Link>
-          </li>
-          <li>
-            <Link href="/our-menu" onClick={toggleDrawer}>Our Menu</Link>
-          </li>
-          <li>
-            <Link href="https://www.google.com/maps?q=181+Ranch+Dr,+Milpitas+95035" target='_blank'>Location</Link>
-          </li>
-          <li>
-            <Link href="/contact-us" onClick={toggleDrawer}>Contact Us</Link>
-          </li>
-          <li>
-            <a
-              href="tel:408-649-3417"
-              className="inline-block px-5 py-2 bg-[#A02621] text-white font-semibold rounded mt-1"
-            >
-             Call to Order 
-            </a>
-          </li>
-        </ul>
-      </div>
-
-      {/* Overlay */}
-      {isDrawerOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-[9991]"
-          onClick={toggleDrawer}
-        ></div>
-      )}
     </header>
   );
 }
 
 export default Header;
+
+

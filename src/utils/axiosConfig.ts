@@ -1,30 +1,40 @@
 import axios from "axios";
 
+const SQUARE_API_URL = process.env.NEXT_PUBLIC_APP_SQUARE_API_URL;
+const SQUARE_ACCESS_TOKEN = process.env.NEXT_PUBLIC_APP_SQURAE_ACCESS_TOKEN_PROD;
+
 const axiosInstance = axios.create({
-      baseURL: process.env.NEXT_PUBLIC_APP_BASE_URL
+  baseURL: SQUARE_API_URL,
+  headers: {
+    "Content-Type": "application/json",
+    "Square-Version": "2023-10-18",
+    Authorization: `Bearer ${SQUARE_ACCESS_TOKEN}`,
+  },
 });
 
-axiosInstance.interceptors.request.use(
-    (config) => {
-        config.headers['Square-Version'] = process.env.SQUIRE_VERSION; // Set CORS headers
-        config.headers.Authorization = `Bearer ${process.env.ACCESS_TOKEN}`
-        config.headers['Content-Type'] = 'application/json';
+const apiEndpoints = {
+  searchCatalogItem: {
+    url: "/v2/catalog/search-catalog-items",
+    method: "POST",
+  },
+  categoryList: {
+    url: "/v2/catalog/list",
+    method: "GET",
+  },
+};
 
-        return config;
-    },
-    (error) => {
-        console.log(error);
-        return Promise.reject(error);
-    }
-);
+// Helper function to call APIs
+export const callSquareAPI = async (key: keyof typeof apiEndpoints, data = {}) => {
+  const endpoint = apiEndpoints[key];
+  if (!endpoint) throw new Error("Invalid API endpoint key");
 
-axiosInstance.interceptors.response.use((response) => {
-    return response;
-},
-    async (error) => {
+  if (endpoint.method === "POST") {
+    return axiosInstance.post(endpoint.url, data);
+  } else if (endpoint.method === "GET") {
+    return axiosInstance.get(endpoint.url);
+  }
 
-        return Promise.reject(error);
-    }
-);
+  throw new Error("Unsupported HTTP method");
+};
 
-export default axiosInstance
+export default axiosInstance;

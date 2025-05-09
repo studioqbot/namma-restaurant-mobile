@@ -3,6 +3,7 @@ import Image from 'next/image';
 import LdaerImage from '../../public/assets/images/slow-cooker-loader.gif';
 
 
+
 const Loader = () => {
 
     return (

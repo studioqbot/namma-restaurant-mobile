@@ -1,0 +1,8 @@
+{
+  "extends": "next",
+  "rules": {
+    "no-unused-vars": "off",
+    "react/no-unused-prop-types": "off",
+    "no-console": "off"
+  }
+}

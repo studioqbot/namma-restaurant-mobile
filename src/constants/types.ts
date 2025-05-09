@@ -1,46 +1,3 @@
-
-export interface NammaSpecialItems {
-    type: string,
-    id: string,
-    item_data: {
-        name: string;
-        description: string;
-        is_taxable: boolean;
-        category_id: string;
-        tax_ids: string[]
-        modifier_list_info: [{
-            modifier_list_id: string
-        }];
-        image_ids?: string[] | undefined;
-        variations: [
-            {
-                id: string
-                item_variation_data: {
-                    item_id: string;
-                    name: string
-                    ordinal: number;
-                    pricing_type: string;
-                    price_money: {
-                        amount: number
-                    },
-
-                }
-            }
-        ],
-
-
-    }
-}
-
-export interface ImageType {
-    id: string;
-    image_data: {
-        name: string;
-        url: string;
-    }
-}
-
-
 export interface OrderDetailsType {
     id: string;
     location_id: string;
@@ -136,19 +93,7 @@ export const OrderDetailsValue: OrderDetailsType = {
 
 }
 
-// export interface LineItems {
-//     quantity: string;
-//     catalog_object_id: string;
-//     uid?: string;
-//     total_money?: {
-//         amount: number
-//     }
-//     base_price_money?: {
-//         amount: number
-//     }
-//     modifiers? : ModifierIds[]
-// }
-export interface LineItemsType {
+export interface LineItems {
     quantity: string;
     catalog_object_id: string;
     uid?: string;
@@ -172,14 +117,10 @@ export interface LineItemsType {
 
 
 
-export interface ModifierDataType {
-    id: string;
-    modifier_list_data: {
-        modifiers: ModifierType[];
-    }
-}
 
-export interface ModifierType  {
+
+
+export interface ModifierType {
     id: string;
     uid: string,
     base_price_money: {
@@ -194,10 +135,6 @@ export interface ModifierType  {
     modifier_data: {
         name: string
     }
-}
-export interface ModifierBody {
- 
-    catalog_object_id: string,
 }
 
 export interface UpdateLineItems {
@@ -254,7 +191,11 @@ export interface CategoryDataType {
     id: string,
     version: number,
     category_data: {
-        name: string
+        name: string,
+        is_top_level: boolean,
+        is_deleted: boolean,
+        location_overrides :object
+
     }
 }
 
@@ -344,7 +285,7 @@ export const CatalogItemsValue = {
 export type OrderCreateBody = {
     order: {
         location_id: string|undefined;
-        line_items: LineItemsType[];
+        line_items: LineItems[];
         pricing_options?: {
             auto_apply_taxes: boolean;
             auto_apply_discounts: boolean;
@@ -354,20 +295,11 @@ export type OrderCreateBody = {
 }
 
 
-export type CatalogSearchBody = {
-    query: {
-        text_query: {
-            keywords: string[]
-        }
-    }
-}
-
-
 export type OrderUpdateBodyAdd = {
     fields_to_clear?: string[];
     order: {
         location_id: string|undefined;
-        line_items?: LineItemsType[];
+        line_items?: LineItems[];
 
         pricing_options?: {
             auto_apply_taxes?: boolean;
@@ -404,37 +336,6 @@ export type LineItemType = {
     }[];
 };
 
-export type YourDetailsType = {
-    mobile: string;
-    name: string;
-    email?: string;
-    note?: string
-
-}
-
-export type Errors = {
-    mobile: string;
-    name: string;
-    email?: string
-
-}
-
-
-export interface TokenData {
-    details: {
-        billing: {
-            postalCode: string;
-        },
-        card: {
-            brand: string;
-            expMonth: number;
-            expYear: number
-            last4: number;
-        },
-    },
-    status: string;
-    token: string;
-}
 
 export interface PaymentBodyType {
     source_id: string;
@@ -451,4 +352,27 @@ export interface PaymentBodyType {
     buyer_email_address?: string;
     buyer_phone_number: string;
     note: string;
+}
+
+export interface ModifierDataType {
+    id: string;
+    modifier_list_data: {
+        modifiers: ModifierType[];
+    }
+}
+
+export interface TokenData {
+    details: {
+        billing: {
+            postalCode: string;
+        },
+        card: {
+            brand: string;
+            expMonth: number;
+            expYear: number
+            last4: number;
+        },
+    },
+    status: string;
+    token: string;
 }

@@ -37,11 +37,4 @@ export const isEmptyObj = (obj: unknown): boolean => {
   };
   
   
-  export const removeItemFrmLocalStorage = (keysToRemove: string[] = []): void => {
-    if (keysToRemove.length) {
-      for (const key of keysToRemove) {
-        localStorage.removeItem(key);
-      }
-    }
-  };
-  
+ 

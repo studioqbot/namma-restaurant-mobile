@@ -1,8 +1,8 @@
 "use client"
 
 import { createContext, useMemo, useState } from "react"
-import { CatalogItemsType, CategoryDataType, LineItemsType, OrderDetailsType, OrderDetailsValue } from "./types";
-
+import { CatalogItemsType, CategoryDataType, LineItems, OrderDetailsType, OrderDetailsValue } from "./types";
+import { ImageType, NammaSpecialItems } from "@/app/home/type";
 
 
 interface GlobalContextType {
@@ -13,27 +13,33 @@ interface GlobalContextType {
     orderDetails: OrderDetailsType;
     isOrderUpdate: string;
     setIsOrderUpdate: React.Dispatch<React.SetStateAction<string>>;
-    lineItems: LineItemsType[];
-    setLineItems: React.Dispatch<React.SetStateAction<LineItemsType[]>>;
+    lineItems: LineItems[];
+    setLineItems: React.Dispatch<React.SetStateAction<LineItems[]>>;
     catalogCategoryAndItem: CatalogItemsType[];
     setCatalogCategoryAndItem: React.Dispatch<React.SetStateAction<CatalogItemsType[]>>;
     catalogCategory: CategoryDataType[],
     setCatalogCategory: React.Dispatch<React.SetStateAction<CategoryDataType[]>>;
-    updateLineItem: LineItemsType[];
-    setUpdateLineItem: React.Dispatch<React.SetStateAction<LineItemsType[]>>;
-    fieldToRemove: string[];
-    setFieldToRemove: React.Dispatch<React.SetStateAction<string[]>>;
-    amount: string | number;
-    setAmount: React.Dispatch<React.SetStateAction<string | number>>;
+    imageData: ImageType[],
+    setImageData: React.Dispatch<React.SetStateAction<ImageType[]>>;
+    nammaSpecialItemsData: NammaSpecialItems[];
+    setNammaSpecialItemsData: React.Dispatch<React.SetStateAction<NammaSpecialItems[]>>;
     catalogCategoryTab: CategoryDataType[],
     setCatalogCategoryTab: React.Dispatch<React.SetStateAction<CategoryDataType[]>>;
+    activeMenu: string;
+    setActiveMenu: React.Dispatch<React.SetStateAction<string>>;
+    updateLineItem: LineItems[];
+    setUpdateLineItem: React.Dispatch<React.SetStateAction<LineItems[]>>;
+    isCountDecreased: boolean;
+    setIsCountDecreased: React.Dispatch<React.SetStateAction<boolean>>;
+
+    fieldToClear: string[],
+    setFieldToClear: React.Dispatch<React.SetStateAction<string[]>>;
     isOrdered: boolean;
     setIsOrdered:React.Dispatch<React.SetStateAction<boolean>>;
-    globalLoading: boolean;
-    setGlobalLoading:React.Dispatch<React.SetStateAction<boolean>>;
     isCartOpen: boolean;
     setIsCartOpen:React.Dispatch<React.SetStateAction<boolean>>;
-
+    globalLoading: boolean;
+    setGlobalLoading:React.Dispatch<React.SetStateAction<boolean>>;
 
 
 }
@@ -51,21 +57,27 @@ const GlobalContext = createContext<GlobalContextType>({
     setCatalogCategoryAndItem: () => { },
     catalogCategory: [],
     setCatalogCategory: () => { },
-    updateLineItem: [],
-    setUpdateLineItem: () => { },
-    fieldToRemove: [],
-    setFieldToRemove: () => { },
-    amount: 0,
-    setAmount: () => { },
+    imageData: [],
+    setImageData: () => { },
+    nammaSpecialItemsData: [],
+    setNammaSpecialItemsData: () => { },
     catalogCategoryTab: [],
     setCatalogCategoryTab: () => { },
+    activeMenu: '',
+    setActiveMenu: () => { },
+    updateLineItem: [],
+    setUpdateLineItem: () => { },
+    isCountDecreased: false,
+    setIsCountDecreased: () => { },
+
+    fieldToClear: [],
+    setFieldToClear: () => { },
     isOrdered: false, 
     setIsOrdered: () => { },
-    globalLoading: false, 
-    setGlobalLoading: () => { },
     isCartOpen: false, 
     setIsCartOpen: () => { },
-
+    globalLoading: false, 
+    setGlobalLoading: () => { },
 
 });
 
@@ -75,16 +87,19 @@ const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =
     const [cartItemCount, setCartItemCount] = useState<number>(0);
     const [orderDetails, setOrderDetails] = useState(OrderDetailsValue);
     const [isOrderUpdate, setIsOrderUpdate] = useState<string>('');
-    const [lineItems, setLineItems] = useState<LineItemsType[]>([]);
+    const [lineItems, setLineItems] = useState<LineItems[]>([]);
     const [catalogCategoryAndItem, setCatalogCategoryAndItem] = useState<CatalogItemsType[]>([]);
     const [catalogCategory, setCatalogCategory] = useState<CategoryDataType[]>([]);
-    const [updateLineItem, setUpdateLineItem] = useState<LineItemsType[]>([]);
-    const [fieldToRemove, setFieldToRemove] = useState<string[]>([]);
-    const [amount, setAmount] = useState<string | number>(0);
-    const [isOrdered, setIsOrdered] = useState<boolean>(false);
+    const [imageData, setImageData] = useState<ImageType[]>([]);
+    const [nammaSpecialItemsData, setNammaSpecialItemsData] = useState<NammaSpecialItems[]>([]);
     const [catalogCategoryTab, setCatalogCategoryTab] = useState<CategoryDataType[]>([]);
-    const [globalLoading, setGlobalLoading] = useState(false);
+    const [activeMenu, setActiveMenu] = useState("All");
+    const [updateLineItem, setUpdateLineItem] = useState<LineItems[]>([]);
+    const [isCountDecreased, setIsCountDecreased] = useState<boolean>(false);
+    const [isOrdered, setIsOrdered] = useState<boolean>(false);
+    const [fieldToClear, setFieldToClear] = useState<string[]>([]);
     const [isCartOpen, setIsCartOpen] = useState(false);
+    const [globalLoading, setGlobalLoading] = useState(false);
 
     const contextValue = useMemo(() => {
         return {
@@ -92,16 +107,16 @@ const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =
             orderDetails, setOrderDetails, isOrderUpdate,
             setIsOrderUpdate, lineItems, setLineItems,
             catalogCategoryAndItem, setCatalogCategoryAndItem,
-            catalogCategory, setCatalogCategory,
-            updateLineItem, setUpdateLineItem,
-            fieldToRemove, setFieldToRemove, amount, setAmount,
-            catalogCategoryTab, setCatalogCategoryTab,
-            isOrdered, setIsOrdered,globalLoading, setGlobalLoading,
-            isCartOpen, setIsCartOpen
+            catalogCategory, setCatalogCategory, imageData, setImageData,
+            nammaSpecialItemsData, setNammaSpecialItemsData,
+            catalogCategoryTab, setCatalogCategoryTab, activeMenu, setActiveMenu,
+            updateLineItem, setUpdateLineItem, isCountDecreased, setIsCountDecreased,
+             fieldToClear, setFieldToClear, isOrdered, setIsOrdered,isCartOpen, setIsCartOpen,
+             globalLoading, setGlobalLoading
         }
-    }, [cartItemCount, isOrderUpdate, orderDetails, fieldToRemove,
-        updateLineItem, lineItems, catalogCategoryAndItem, catalogCategory,
-        amount, catalogCategoryTab, isOrdered, globalLoading, isCartOpen])
+    }, [cartItemCount, isOrderUpdate, orderDetails, lineItems, catalogCategoryAndItem,
+        catalogCategory, activeMenu, nammaSpecialItemsData, imageData, catalogCategoryTab,
+        updateLineItem, isCountDecreased, fieldToClear,isOrdered, isCartOpen,globalLoading])
 
     return <GlobalContext.Provider value={contextValue}>{children}</GlobalContext.Provider>
 }

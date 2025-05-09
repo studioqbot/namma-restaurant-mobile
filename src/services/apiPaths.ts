@@ -7,7 +7,7 @@
 //     orderUpdate:'/api/order-update',
 //     orderRetrieve:'/api/order-retrieve',
 //     payment:'/api/payment-create',
-//     catalogSearch :'/api/catalog-search'
+//     catalogObject:'/api/catalog-object',
  
 // }
 
@@ -19,7 +19,6 @@ const API_ENDPOINTS = {
     orderRetrieve:'/orders',
     payment:'/payments',
     catalogObject:'/catalog/object',
-    catalogSearch:'/catalog/search'
  
 }
 
