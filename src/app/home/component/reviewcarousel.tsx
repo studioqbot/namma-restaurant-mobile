@@ -22,40 +22,89 @@ export default function ReviewCard() {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-w-full max-w-lg mx-auto">
       <div className="relative">
         <img
-          className="absolute bottom-[-20px] left-[10px] right-0"
+          className="absolute bottom-[-24px] left-[10px] right-0"
           alt="Review background"
           src="/assets/images/review-bg.svg"
         />
         <Slider {...settings}>
+          {/* Slide 1 */}
           <div>
-            <div className="max-w-lg mx-auto bg-white rounded-[15px] flex flex-col lg:flex-row overflow-hidden">
-              {/* Image Section */}
+            <div className="max-w-lg mx-auto bg-white rounded-[15px] flex flex-col sm:flex-row overflow-hidden shadow-md ">
               <div
-                className="bg-cover bg-no-repeat bg-center min-h-[150px] lg:min-w-[150px]"
+                className="w-full sm:w-[150px] min-h-[150px] sm:h-auto bg-cover bg-no-repeat bg-center"
                 style={{ backgroundImage: `url('/assets/images/review-card-img.svg')` }}
               ></div>
-
-              {/* Text Content */}
-              <div className="py-4 px-5">
+              <div className="py-4 px-5 flex-1 ">
                 <p className="text-[#222A4A] text-[13px] leading-[21px] mb-3">
                   The Vanjaram Fish Fry at Namma Restaurant is simply outstanding! Perfectly spiced, crisp on the outside, and tender inside—every bite is a burst of Karaikudi goodness. It's my absolute favorite!
                 </p>
                 <div className="flex items-center space-x-2">
-                  <Image
-                    src="/assets/images/google.svg"
-                    alt="Google logo"
-                    width={20}
-                    height={20}
-                  />
+                  <Image src="/assets/images/google.svg" alt="Google logo" width={20} height={20} />
                   <span className="text-[#222A4A] text-[14px] font-semibold">Priya R</span>
                 </div>
               </div>
             </div>
           </div>
-          {/* Additional slides can be added here following the same structure */}
+
+          {/* Slide 2 */}
+          <div>
+            <div className="max-w-lg mx-auto bg-white rounded-[15px] flex flex-col sm:flex-row overflow-hidden shadow-md">
+              <div
+                className="w-full sm:w-[150px] min-h-[150px] sm:h-auto bg-cover bg-no-repeat bg-center"
+                style={{ backgroundImage: `url('/assets/images/review-card-img.svg')` }}
+              ></div>
+              <div className="py-4 px-5 flex-1">
+                <p className="text-[#222A4A] text-[13px] leading-[21px] mb-3">
+                  Amazing service and the Chettinad Chicken Curry was so flavorful. Definitely going back for more!
+                </p>
+                <div className="flex items-center space-x-2">
+                  <Image src="/assets/images/google.svg" alt="Google logo" width={20} height={20} />
+                  <span className="text-[#222A4A] text-[14px] font-semibold">Rajesh K</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Slide 3 */}
+          <div>
+            <div className="max-w-lg mx-auto bg-white rounded-[15px] flex flex-col sm:flex-row overflow-hidden shadow-md">
+              <div
+                className="w-full sm:w-[150px] min-h-[150px] sm:h-auto bg-cover bg-no-repeat bg-center"
+                style={{ backgroundImage: `url('/assets/images/review-card-img.svg')` }}
+              ></div>
+              <div className="py-4 px-5 flex-1">
+                <p className="text-[#222A4A] text-[13px] leading-[21px] mb-3">
+                  We loved the authentic taste and friendly ambiance. Namma Restaurant feels like home!
+                </p>
+                <div className="flex items-center space-x-2">
+                  <Image src="/assets/images/google.svg" alt="Google logo" width={20} height={20} />
+                  <span className="text-[#222A4A] text-[14px] font-semibold">Divya M</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Slide 4 */}
+          <div>
+            <div className="max-w-lg mx-auto bg-white rounded-[15px] flex flex-col sm:flex-row overflow-hidden shadow-md">
+              <div
+                className="w-full sm:w-[150px] min-h-[150px] sm:h-auto bg-cover bg-no-repeat bg-center"
+                style={{ backgroundImage: `url('/assets/images/review-card-img.svg')` }}
+              ></div>
+              <div className="py-4 px-5 flex-1">
+                <p className="text-[#222A4A] text-[13px] leading-[21px] mb-3">
+                  Tried the Veg Meals and it was beyond expectations—fresh, tasty, and satisfying!
+                </p>
+                <div className="flex items-center space-x-2">
+                  <Image src="/assets/images/google.svg" alt="Google logo" width={20} height={20} />
+                  <span className="text-[#222A4A] text-[14px] font-semibold">Karthik S</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </Slider>
       </div>
     </div>

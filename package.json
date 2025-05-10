@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tailwindcss/line-clamp": "^0.4.4",
     "axios": "^1.7.9",
     "dayjs": "^1.11.13",
     "framer-motion": "^12.8.0",

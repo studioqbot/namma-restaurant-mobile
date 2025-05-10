@@ -2,6 +2,7 @@ import React from 'react';
 import Banner from './component/banner';
 import NammaSpecials from './component/nammaSpecial';
 import FlavorJourney from './component/FlavorJourney';
+import ReviewCard from './component/reviewcarousel';
 
 export interface CatelogFilterBody {
   limit: number;
@@ -19,7 +20,7 @@ async function HomePage() {
       <Banner />
       <NammaSpecials />
       <FlavorJourney />
-    </>
+      </>
   );
 }
 

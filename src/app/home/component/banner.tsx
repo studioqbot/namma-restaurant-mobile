@@ -45,11 +45,12 @@ function Banner() {
                             </button>
                         </div>
                     </div>
+                        <ReviewCard />
+
                 </div>
 
                 <div className="col-span-1 lg:col-span-5" style={{ background: 'green' }}>
                     <div className="w-full">
-                        <ReviewCard />
                     </div>
                 </div>
             </section>
