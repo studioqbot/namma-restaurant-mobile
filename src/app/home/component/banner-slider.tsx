@@ -33,7 +33,7 @@ const ImageSlider = () => {
       <Slider {...settings} className="outline-0">
         {images.map((image, index) => (
           <div key={index} className="banner-slider">
-            <div className="relative w-[auto] h-[900] "> {/* Adjust aspect ratio as needed */}
+            <div className="relative w-[auto] lg:h-[900px] "> {/* Adjust aspect ratio as needed */}
               <Image
                 src={image}
                 alt={`Slide ${index + 1}`}

@@ -45,7 +45,7 @@ function Banner() {
                             </button>
                         </div>
                     </div>
-                    <div className="pl-[40] relative top-[-70] md:hidden">
+                    <div className=" md:hidden">
                         <ImageSlider />
                     </div>
                     <ReviewCard />
