@@ -28,7 +28,7 @@ const FlavorJourney = () => {
                 </div>
 
                 {/* Image second (right side) */}
-                <div className="col-span-1 md:col-span-6 h-full">
+                <div className="col-span-1 md:col-span-6 h-full pb-[40]">
                   <div
                     className="w-full h-full bg-cover bg-no-repeat bg-center min-h-[300px] rounded-[15px]"
                     style={{ backgroundImage: `url('/assets/images/journey-bg.svg')` }}
