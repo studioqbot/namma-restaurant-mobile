@@ -79,7 +79,7 @@ const NammaSpecials = () => {
       <div className="max-w-6xl mx-auto py-[40px] bg-white relative rounded-[22px] overflow-hidden">
 
         {/* Background pattern image with fill */}
-        <div className="absolute left-[24px] top-0 bottom-0 z-[1] w-full h-full">
+        <div className="absolute top-0 bottom-0 z-[1] w-full h-full">
           <Image
             src="/assets/images/bg-pattern1.svg"
             alt="background pattern"
