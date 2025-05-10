@@ -4,6 +4,7 @@ import NammaSpecials from './component/nammaSpecial';
 import FlavorJourney from './component/FlavorJourney';
 import ReviewCard from './component/reviewcarousel';
 import ImageSlider from './component/banner-slider';
+import Image from 'next/image'; // ✅ Make sure this is present
 
 export interface CatelogFilterBody {
   limit: number;
@@ -17,7 +18,10 @@ export interface CatelogFilterBody {
 
 async function HomePage() {
   return (
+    <main>
+      <Image src="/assets/images/banner-bg.svg" width={'150'} height={'150'} alt="banner-bg" className="w-full absolute top-[170px] z-[-1]" />
     <div className=" container flex flex-col lg:flex-row gap-6 px-4">
+      
       {/* LEFT COLUMN - 40% */}
       <div className="w-full lg:w-[40%] flex flex-col gap-6">
         <Banner />
@@ -32,12 +36,12 @@ async function HomePage() {
         <div className="pl-[40] relative top-[-70]">
           <ImageSlider />
         </div>
-        <div className="relative top-[-80 ]">
+        <div className="relative top-[-120]">
           <FlavorJourney />
         </div>
       </div>
     </div>
-
+</main>
   );
 }
 

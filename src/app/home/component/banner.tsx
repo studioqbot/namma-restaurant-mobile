@@ -9,7 +9,7 @@ function Banner() {
     const router = useRouter()
     return (
         <main className=' container w-full relative pt-[55px]'>
-            <Image src="/assets/images/banner-bg.svg" width={'150'} height={'150'} alt="banner-bg" className="w-full absolute top-[50px] z-[-1]" />
+          
 
             <section className="grid grid-cols-1 lg:grid-cols-4 gap-[40px]">
                 <div className="col-span-1 lg:col-span-5">
