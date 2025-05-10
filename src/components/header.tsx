@@ -93,7 +93,7 @@ function Header() {
           </div>
 
           {/* Mobile Hamburger */}
-          <button className="md:hidden text-[#222A4A] text-2xl" onClick={() => setIsMenuOpen(true)}>
+          <button className="md:hidden text-[#222A4A] text-3xl" onClick={() => setIsMenuOpen(true)}>
             ☰
           </button>
         </nav>
