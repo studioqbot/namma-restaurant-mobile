@@ -11,8 +11,8 @@ function Banner() {
         <main className=' container w-full relative pt-[55px]'>
             <Image src="/assets/images/banner-bg.svg" width={'150'} height={'150'} alt="banner-bg" className="w-full absolute top-[50px] z-[-1]" />
 
-            <section className="grid grid-cols-1 lg:grid-cols-12 gap-[40px]">
-                <div className="col-span-1 lg:col-span-5" style={{ background: 'blue' }}>
+            <section className="grid grid-cols-1 lg:grid-cols-4 gap-[40px]">
+                <div className="col-span-1 lg:col-span-5">
                     <div className="w-full py-[70px] pt-[30px] pb-[50px]">
                         <h1 className="text-[32px] leading-[40px] text-[#222A4A] font-unbounded">
                             Authentic
@@ -49,15 +49,10 @@ function Banner() {
 
                 </div>
 
-                <div className="col-span-1 lg:col-span-5" style={{ background: 'green' }}>
-                    <div className="w-full">
-                    </div>
-                </div>
+               
             </section>
 
-            <div className='col-span-7' style={{ background: 'red' }}>
-                <ImageSlider />
-            </div>
+          
         </main>
     );
 }
