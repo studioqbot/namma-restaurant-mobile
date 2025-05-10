@@ -89,16 +89,11 @@ const NammaSpecials = () => {
   }, [nammaSpecialItemsData]);
 
   return (
-    <div className="max-w-6xl mx-auto px-[35px] py-[70px] pb-[30px] bg-white relative rounded-[22px] mt-[-100px]">
-      <div className="h-full absolute w-full top-0 bottom-0 z-[1] flex justify-center">
-        <Image
-          src="/assets/images/bg-pattern1.svg"
-          alt="background pattern"
-          width={400}
-          height={100}
-          className="h-full absolute left-[24px] top-0 bottom-0 z-[1]"
-        />
-      </div>
+    <section className="container " style={{width : 500 }}>
+    <div className="max-w-6xl mx-auto py-[40px]  bg-white relative rounded-[22px]">
+     
+   
+      
       <div className="text-center flex justify-center">
         <Image
           src="/assets/images/namma-special.svg"
@@ -108,6 +103,16 @@ const NammaSpecials = () => {
           className="absolute top-[-18px] z-[2]"
         />
       </div>
+
+           
+      
+        <Image
+          src="/assets/images/bg-pattern1.svg"
+          alt="background pattern"
+          width={500}
+          height={10}
+          className="absolute"
+        />
 
       {loading || nammaSpecialItemsData.length === 0 ? (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
@@ -123,6 +128,7 @@ const NammaSpecials = () => {
           ))}
         </div>
       ) : (
+        // <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-y-[60px] mb-[40px] relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-y-[60px] mb-[40px] relative z-10">
           <AnimatePresence mode="popLayout">
             {shuffledItems.map((data, index) => (
@@ -154,6 +160,7 @@ const NammaSpecials = () => {
         </button>
       </div>
     </div>
+    </section>
   );
 };
 

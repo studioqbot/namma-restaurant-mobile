@@ -18,12 +18,17 @@ async function HomePage() {
       <Banner />
       <div className="w-full">
         <div className="container">
+          <section>
+            {/* <div className="col-span-1 md:col-span-5"> */}
+              <NammaSpecials />
+          </section>
+
           {/* Responsive grid layout */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
             {/* Left column */}
-            <div className="col-span-1 md:col-span-5">
+            {/* <div className="col-span-1 md:col-span-5">
               <NammaSpecials />
-            </div>
+            </div> */}
             {/* Right column */}
             <div className="col-span-1 md:col-span-7 overflow-hidden rounded-[23px]">
               <div className="w-full rounded-[23px] bg-[#F7F0E3] py-[23px] px-[23px] pr-[70px] mt-[35px] h-full">
