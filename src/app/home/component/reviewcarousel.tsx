@@ -22,19 +22,21 @@ export default function ReviewCard() {
   };
 
   return (
-    <div className="w-w-full max-w-lg mx-auto">
+    <div className="w-w-full max-w-lg  mx-auto">
       <div className="relative">
-        <img
-          className="absolute bottom-[-24px] left-[10px] right-0"
-          alt="Review background"
-          src="/assets/images/review-bg.svg"
-        />
+        <div>
+          <img
+            className="absolute bottom-[-25px] w-[calc(100%-8px)] mx-[2px] my-[1px] "
+            alt="Review background"
+            src="/assets/images/review-bg.svg"
+          />
+        </div>
         <Slider {...settings}>
           {/* Slide 1 */}
           <div>
             <div className="max-w-lg mx-auto bg-white rounded-[15px] flex flex-col sm:flex-row overflow-hidden shadow-md ">
               <div
-                className="w-full sm:w-[150px] min-h-[150px] sm:h-auto bg-cover bg-no-repeat bg-center"
+                className="w-full sm:w-[150px] min-h-[180px] sm:h-auto bg-cover bg-no-repeat bg-center"
                 style={{ backgroundImage: `url('/assets/images/review-card-img.svg')` }}
               ></div>
               <div className="py-4 px-5 flex-1 ">
@@ -53,7 +55,7 @@ export default function ReviewCard() {
           <div>
             <div className="max-w-lg mx-auto bg-white rounded-[15px] flex flex-col sm:flex-row overflow-hidden shadow-md">
               <div
-                className="w-full sm:w-[150px] min-h-[150px] sm:h-auto bg-cover bg-no-repeat bg-center"
+                className="w-full sm:w-[150px] min-h-[180px] sm:h-auto bg-cover bg-no-repeat bg-center"
                 style={{ backgroundImage: `url('/assets/images/review-card-img.svg')` }}
               ></div>
               <div className="py-4 px-5 flex-1">
@@ -72,7 +74,7 @@ export default function ReviewCard() {
           <div>
             <div className="max-w-lg mx-auto bg-white rounded-[15px] flex flex-col sm:flex-row overflow-hidden shadow-md">
               <div
-                className="w-full sm:w-[150px] min-h-[150px] sm:h-auto bg-cover bg-no-repeat bg-center"
+                className="w-full sm:w-[150px] min-h-[180px] sm:h-auto bg-cover bg-no-repeat bg-center"
                 style={{ backgroundImage: `url('/assets/images/review-card-img.svg')` }}
               ></div>
               <div className="py-4 px-5 flex-1">
@@ -91,7 +93,7 @@ export default function ReviewCard() {
           <div>
             <div className="max-w-lg mx-auto bg-white rounded-[15px] flex flex-col sm:flex-row overflow-hidden shadow-md">
               <div
-                className="w-full sm:w-[150px] min-h-[150px] sm:h-auto bg-cover bg-no-repeat bg-center"
+                className="w-full sm:w-[150px] min-h-[180px] sm:h-auto bg-cover bg-no-repeat bg-center"
                 style={{ backgroundImage: `url('/assets/images/review-card-img.svg')` }}
               ></div>
               <div className="py-4 px-5 flex-1">

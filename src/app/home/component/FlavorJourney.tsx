@@ -4,7 +4,7 @@ const FlavorJourney = () => {
   return (
     // <div className="w-full">
       <div className="container px-[20]">
-        <div className="grid grid-cols-1  md:grid-cols-12 lg:grid-cols-6 gap-10">
+        <div className="grid grid-cols-1  md:grid-cols-6 lg:grid-cols-6 gap-10">
           <div className="col-span-1 md:col-span-7 overflow-hidden rounded-[23px]">
             <div className="w-full rounded-[23px] bg-[#F7F0E3] py-[23px] px-[23px] mt-[35px] h-full">
               <div className="grid grid-cols-1 md:grid-cols-12 gap-[25px] h-full items-center">
@@ -16,7 +16,7 @@ const FlavorJourney = () => {
                   />
                 </div>
                 {/* Text first (left side) */}
-                <div className="col-span-1 md:col-span-6">
+                <div className="col-span-1 md:col-span-6 ">
                   <div className="w-full">
                     <h3 className="text-black text-[25px] leading-[38px] font-unbounded mb-[15px]">
                       A Journey Through <br /> India{"'"}s Flavors

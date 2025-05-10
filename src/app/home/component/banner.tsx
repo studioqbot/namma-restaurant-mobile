@@ -9,7 +9,7 @@ function Banner() {
     const router = useRouter()
     return (
         <main className=' container w-full relative pt-[55px]'>
-          
+
 
             <section className="grid grid-cols-1 lg:grid-cols-4 gap-[40px]">
                 <div className="col-span-1 lg:col-span-5">
@@ -45,14 +45,17 @@ function Banner() {
                             </button>
                         </div>
                     </div>
-                        <ReviewCard />
+                    <div className="pl-[40] relative top-[-70] md:hidden">
+                        <ImageSlider />
+                    </div>
+                    <ReviewCard />
 
                 </div>
 
-               
+
             </section>
 
-          
+
         </main>
     );
 }
