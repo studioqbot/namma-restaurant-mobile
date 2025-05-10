@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import dayjs from 'dayjs';
-
 import GlobalContext from '@/constants/global-context';
 
 interface TimeRange {
@@ -65,7 +64,7 @@ function Header() {
   }, [operationalHours, setIsCartOpen]);
 
   return (
-    <header className="w-full py-[22px]">
+    <header className="w-full py-[22px] z-10 relative">
       <div className="container">
         <nav className="flex justify-between items-center">
           <button className="flex items-center" onClick={() => router.push('/home')}>
@@ -78,55 +77,59 @@ function Header() {
             />
           </button>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-[45px] text-[14px] text-[#222A4A]">
             <Link href="/">Home</Link>
             <Link href="/our-menu">Our Menu</Link>
             <Link href="/about-us">About us</Link>
-            <Link href="https://www.google.com/maps?q=181+Ranch+Dr,+Milpitas+95035" target="_blank">Location</Link>
+            <Link
+              href="https://www.google.com/maps?q=181+Ranch+Dr,+Milpitas+95035"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Location
+            </Link>
             <Link href="/contact-us">Contact us</Link>
           </div>
 
-          {/* Hamburger (Mobile only) */}
+          {/* Mobile Hamburger */}
           <button className="md:hidden text-[#222A4A] text-2xl" onClick={() => setIsMenuOpen(true)}>
             ☰
           </button>
         </nav>
       </div>
 
-      {/* Mobile Slide Menu */}
-      <div
-        className={`
-          fixed inset-0 z-50 flex justify-end
-          transition-transform duration-300 ease-in-out
-          ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}
-          pointer-events-${isMenuOpen ? 'auto' : 'none'}
-        `}
-      >
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-black/40" onClick={() => setIsMenuOpen(false)} />
+      {/* Conditionally Render Mobile Menu */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 z-50 flex justify-end">
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-black/40" onClick={() => setIsMenuOpen(false)} />
 
-        {/* Side Panel */}
-        <div
-          className={`
-            relative w-[75%] h-screen bg-white p-6 shadow-lg
-            transform transition-transform duration-300 ease-in-out
-            ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}
-          `}
-        >
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-lg font-semibold text-[#222A4A]">Menu</h2>
-            <button onClick={() => setIsMenuOpen(false)} className="text-2xl text-[#222A4A]">×</button>
+          {/* Slide-in Panel */}
+          <div className="relative w-[75%] h-screen bg-white p-6 shadow-lg z-50">
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="text-lg font-semibold text-[#222A4A]">Menu</h2>
+              <button onClick={() => setIsMenuOpen(false)} className="text-3xl text-[#222A4A]">
+                ×
+              </button>
+            </div>
+            <nav className="flex flex-col gap-4 text-[16px] text-[#222A4A]">
+              <Link href="/" onClick={() => setIsMenuOpen(false)}>Home</Link>
+              <Link href="/our-menu" onClick={() => setIsMenuOpen(false)}>Our Menu</Link>
+              <Link href="/about-us" onClick={() => setIsMenuOpen(false)}>About us</Link>
+              <Link
+                href="https://www.google.com/maps?q=181+Ranch+Dr,+Milpitas+95035"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Location
+              </Link>
+              <Link href="/contact-us" onClick={() => setIsMenuOpen(false)}>Contact us</Link>
+            </nav>
           </div>
-          <nav className="flex flex-col gap-4 text-[16px] text-[#222A4A]">
-            <Link href="/" onClick={() => setIsMenuOpen(false)}>Home</Link>
-            <Link href="/our-menu" onClick={() => setIsMenuOpen(false)}>Our Menu</Link>
-            <Link href="/about-us" onClick={() => setIsMenuOpen(false)}>About us</Link>
-            <Link href="https://www.google.com/maps?q=181+Ranch+Dr,+Milpitas+95035" target="_blank" onClick={() => setIsMenuOpen(false)}>Location</Link>
-            <Link href="/contact-us" onClick={() => setIsMenuOpen(false)}>Contact us</Link>
-          </nav>
         </div>
-      </div>
+      )}
     </header>
   );
 }

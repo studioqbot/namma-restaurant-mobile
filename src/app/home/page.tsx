@@ -21,15 +21,20 @@ async function HomePage() {
       {/* LEFT COLUMN - 40% */}
       <div className="w-full lg:w-[40%] flex flex-col gap-6">
         <Banner />
-        <NammaSpecials />
+        <div className="relative top-[60]">
+          <NammaSpecials />
+
+        </div>
       </div>
 
       {/* RIGHT COLUMN - 60% */}
       <div className="w-full lg:w-[60%]">
-
-        <ImageSlider />
-
-        <FlavorJourney />
+        <div className="pl-[40] relative top-[-70]">
+          <ImageSlider />
+        </div>
+        <div className="relative top-[-80 ]">
+          <FlavorJourney />
+        </div>
       </div>
     </div>
 
