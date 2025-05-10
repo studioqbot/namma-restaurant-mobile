@@ -1,6 +1,4 @@
 /* eslint-disable */
-
-
 'use client';
 
 import React, { useContext, useEffect, useState } from 'react';
@@ -11,20 +9,18 @@ import Image from 'next/image';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { AnimatePresence, motion } from 'framer-motion';
-import { fetchMenuHotSelling } from '../../../utils/fetchMenuHotSelling';
 import placeHolder from '../../../../public/assets/images/place-holder.png';
 
 interface ItemData {
   amount: string;
-  ecom_image_uris: string ;
+  ecom_image_uris: string;
   price: string;
   name: string;
-  image: string ;
+  image: string;
   item_data: {
     id: string;
     name: string;
     image: string;
-    // price: string;
     category: string;
   };
 }
@@ -34,9 +30,7 @@ type NammaSpecialCardProps = {
   lineItems: LineItems[];
   setLineItems: React.Dispatch<React.SetStateAction<LineItems[]>>;
   setIsItemAdded: () => void;
-  // price: string; // 👈 This is the missing prop
 };
-
 
 const NammaSpecials = () => {
   const { lineItems, setLineItems } = useContext(GlobalContext);
@@ -45,30 +39,22 @@ const NammaSpecials = () => {
   const [shuffledItems, setShuffledItems] = useState<ItemData[]>([]);
   const router = useRouter();
 
+  useEffect(() => {
+    setLoading(true);
+    const fetcHotSellingList = async () => {
+      try {
+        const response = await fetch('api/hot-selling');
+        const data = await response.json();
+        setNammaSpecialItemsData(data.hot_selling_items);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching menu list:', error);
+      }
+    };
+    fetcHotSellingList();
+  }, []);
 
-+
-
-    useEffect(() => {
-                setLoading(true);
-
-        const fetcHotSellingList = async () => {
-            try {
-                const response = await fetch('api/hot-selling');
-                const data = await response.json();
-                
-                setNammaSpecialItemsData(data.hot_selling_items);
-                setLoading(false);
-            } catch (error) {
-                console.error('Error fetching menu list:', error);
-            }
-        };
-
-        fetcHotSellingList();
-    }, []); 
-
-    console.log({nammaSpecialItemsData})
-
-    useEffect(() => {
+  useEffect(() => {
     const shuffleArray = (array: ItemData[]) => {
       const arr = [...array];
       for (let i = arr.length - 1; i > 0; i--) {
@@ -89,77 +75,76 @@ const NammaSpecials = () => {
   }, [nammaSpecialItemsData]);
 
   return (
-    <section className="container " style={{width : 500 }}>
-    <div className="max-w-6xl mx-auto py-[40px]  bg-white relative rounded-[22px]">
-     
-   
-      
-      <div className="text-center flex justify-center">
-        <Image
-          src="/assets/images/namma-special.svg"
-          width={167}
-          height={58}
-          alt="Namma Specials"
-          className="absolute top-[-18px] z-[2]"
-        />
-      </div>
+    <section className="container" style={{ width: 500 }}>
+      <div className="max-w-6xl mx-auto py-[40px] bg-white relative rounded-[22px] overflow-hidden">
 
-           
-      
-        <Image
-          src="/assets/images/bg-pattern1.svg"
-          alt="background pattern"
-          width={500}
-          height={10}
-          className="absolute"
-        />
-
-      {loading || nammaSpecialItemsData.length === 0 ? (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
-          {Array.from({ length: 6 }).map((_, index) => (
-            <div
-              key={index}
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '30px' }}
-            >
-              <Skeleton height={200} width={200} style={{ borderRadius: '12px', marginBottom: '20px' }} />
-              <Skeleton height={14} width={100} style={{ marginBottom: '6px' }} />
-              <Skeleton height={14} width={70} style={{ marginBottom: '15px' }} />
-            </div>
-          ))}
+        {/* Background pattern image with fill */}
+        <div className="absolute left-[24px] top-0 bottom-0 z-[1] w-full h-full">
+          <Image
+            src="/assets/images/bg-pattern1.svg"
+            alt="background pattern"
+            fill
+            className="object-cover"
+          />
         </div>
-      ) : (
-        // <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-y-[60px] mb-[40px] relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-y-[60px] mb-[40px] relative z-10">
-          <AnimatePresence mode="popLayout">
-            {shuffledItems.map((data, index) => (
-              <motion.div
+
+        {/* Title image */}
+        <div className="text-center flex justify-center relative z-[2]">
+          <Image
+            src="/assets/images/namma-special.svg"
+            width={167}
+            height={58}
+            alt="Namma Specials"
+            className="absolute top-[-18px]"
+          />
+        </div>
+
+        {/* Content Section */}
+        {loading || nammaSpecialItemsData.length === 0 ? (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }} className="relative z-10">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div
                 key={index}
-                initial={{ opacity: 1 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 2 }}
+                style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '30px' }}
               >
-                <NammaSpecialCard
-                  data={data}
-                  lineItems={lineItems}
-                  setLineItems={setLineItems}
-                  setIsItemAdded={() => {}}
-                />
-              </motion.div>
+                <Skeleton height={200} width={200} style={{ borderRadius: '12px', marginBottom: '20px' }} />
+                <Skeleton height={14} width={100} style={{ marginBottom: '6px' }} />
+                <Skeleton height={14} width={70} style={{ marginBottom: '15px' }} />
+              </div>
             ))}
-          </AnimatePresence>
-        </div>
-      )}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-y-[60px] mb-[40px] relative z-10">
+            <AnimatePresence mode="popLayout">
+              {shuffledItems.map((data, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 1 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 2 }}
+                >
+                  <NammaSpecialCard
+                    data={data}
+                    lineItems={lineItems}
+                    setLineItems={setLineItems}
+                    setIsItemAdded={() => {}}
+                  />
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+        )}
 
-      <div className="text-center relative z-10">
-        <button
-          className="w-full max-w-md py-[15px] border border-[#A02621] rounded-[100px] mt-[11px] overflow-hidden text-[#A02621] text-[15px] font-medium"
-          onClick={() => router.push('/our-menu')}
-        >
-          Explore Full Menu
-        </button>
+        <div className="text-center relative z-10">
+          <button
+            className="w-full max-w-md py-[15px] border border-[#A02621] rounded-[100px] mt-[11px] overflow-hidden text-[#A02621] text-[15px] font-medium"
+            onClick={() => router.push('/our-menu')}
+          >
+            Explore Full Menu
+          </button>
+        </div>
       </div>
-    </div>
     </section>
   );
 };
@@ -179,7 +164,7 @@ const NammaSpecialCard = React.memo(({ data }: NammaSpecialCardProps) => {
         ) : (
           <Image
             src={placeHolder}
-            width={100}
+            max-width={100}
             height={100}
             alt="No image"
             className="w-[163px] h-[163px] rounded-[15px]"
