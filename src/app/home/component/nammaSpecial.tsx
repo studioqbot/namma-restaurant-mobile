@@ -75,7 +75,16 @@ const NammaSpecials = () => {
   }, [nammaSpecialItemsData]);
 
   return (
-    <section className="container" style={{ width: 500 }}>
+    <section className="container w-auto">
+       <div className="text-center flex justify-center relative z-[9999992] bottom-[0]" style={{background:'red'}}>
+          <Image
+            src="/assets/images/namma-special.svg"
+            width={167}
+            height={58}
+            alt="Namma Specials"
+            className="absolute top-[-18px]"
+          />
+        </div>
       <div className="max-w-6xl mx-auto py-[40px] bg-white relative rounded-[22px] overflow-hidden">
 
         {/* Background pattern image with fill */}
@@ -89,15 +98,7 @@ const NammaSpecials = () => {
         </div>
 
         {/* Title image */}
-        <div className="text-center flex justify-center relative z-[2]">
-          <Image
-            src="/assets/images/namma-special.svg"
-            width={167}
-            height={58}
-            alt="Namma Specials"
-            className="absolute top-[-18px]"
-          />
-        </div>
+       
 
         {/* Content Section */}
         {loading || nammaSpecialItemsData.length === 0 ? (

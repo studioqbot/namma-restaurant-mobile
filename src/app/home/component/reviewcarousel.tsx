@@ -24,7 +24,7 @@ export default function ReviewCard() {
   return (
     <div className="w-w-full max-w-lg  mx-auto">
       <div className="relative">
-        <div>
+        <div className=" hidden md:block">
           <img
             className="absolute bottom-[-25px] w-[calc(100%-8px)] mx-[2px] my-[1px] "
             alt="Review background"
