@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from "react";
@@ -33,7 +32,8 @@ const ImageSlider = () => {
       <Slider {...settings} className="outline-0">
         {images.map((image, index) => (
           <div key={index} className="banner-slider">
-            <div className="relative w-[auto] lg:h-[900px] "> {/* Adjust aspect ratio as needed */}
+            {/* Adjust the height for different devices */}
+            <div className="w-full h-[300px] sm:h-[700] md:h-[700px] lg:h-[900px]">
               <Image
                 src={image}
                 alt={`Slide ${index + 1}`}
@@ -41,7 +41,6 @@ const ImageSlider = () => {
                 className="object-contain"
               />
             </div>
-
           </div>
         ))}
       </Slider>

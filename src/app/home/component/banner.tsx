@@ -24,6 +24,11 @@ function Banner() {
                         <p className="text-[17px] text-[#222A4A] leading-[22px] py-[17px]">
                             Experience the rich culinary heritage of South India, crafted with love and served fresh for your takeaway delight.
                         </p>
+
+                        {/* <div className="block lg:hidden sm:bg-transparent md:bg-green-500 sm:bg-blue-500 lg:bg-transparent p-4 rounded-[100px]"> */}
+                        <div className="block lg:hidden p-4 rounded-[100px]">
+                            <ImageSlider />
+                        </div>
                         <div className="flex gap-[15px]">
                             <button
                                 className="bg-[#FFC300] px-[32px] py-[11px] rounded-[100px] text-[17px] font-bold text-[#A02621] relative"
@@ -45,9 +50,8 @@ function Banner() {
                             </button>
                         </div>
                     </div>
-                    <div className=" md:hidden">
-                        <ImageSlider />
-                    </div>
+
+
                     <ReviewCard />
 
                 </div>
