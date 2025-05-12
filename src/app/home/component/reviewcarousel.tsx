@@ -22,7 +22,8 @@ export default function ReviewCard() {
   };
 
   return (
-    <div className="w-w-full max-w-lg  mx-auto">
+   <div className="w-full mx-auto sm:grid sm:grid-cols-1">
+
       <div className="relative">
         <div className=" hidden md:block">
           <img
@@ -34,16 +35,16 @@ export default function ReviewCard() {
         <Slider {...settings}>
           {/* Slide 1 */}
           <div>
-            <div className="max-w-lg mx-auto bg-white rounded-[15px] flex flex-col sm:flex-row overflow-hidden shadow-md ">
+            <div className="mx-auto bg-white rounded-[15px] flex flex-col sm:flex-row overflow-hidden shadow-md ">
               <div
-                className="w-full sm:w-[150px] min-h-[180px] sm:h-auto bg-cover bg-no-repeat bg-center"
+                className="w-full sm:w-[140px] min-h-[180px] sm:h-auto bg-cover bg-no-repeat bg-center"
                 style={{ backgroundImage: `url('/assets/images/review-card-img.svg')` }}
               ></div>
               <div className="py-4 px-5 flex-1 ">
                 <p className="text-[#222A4A] text-[13px] leading-[21px] mb-3">
                   The Vanjaram Fish Fry at Namma Restaurant is simply outstanding! Perfectly spiced, crisp on the outside, and tender inside—every bite is a burst of Karaikudi goodness. It's my absolute favorite!
                 </p>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 w-full max-w-lg">
                   <Image src="/assets/images/google.svg" alt="Google logo" width={20} height={20} />
                   <span className="text-[#222A4A] text-[14px] font-semibold">Priya R</span>
                 </div>
@@ -53,9 +54,9 @@ export default function ReviewCard() {
 
           {/* Slide 2 */}
           <div>
-            <div className="max-w-lg mx-auto bg-white rounded-[15px] flex flex-col sm:flex-row overflow-hidden shadow-md">
+            <div className="mx-auto bg-white rounded-[15px] flex flex-col sm:flex-row overflow-hidden shadow-md">
               <div
-                className="w-full sm:w-[150px] min-h-[180px] sm:h-auto bg-cover bg-no-repeat bg-center"
+                className="w-full sm:w-[140px] min-h-[180px] sm:h-auto bg-cover bg-no-repeat bg-center"
                 style={{ backgroundImage: `url('/assets/images/review-card-img.svg')` }}
               ></div>
               <div className="py-4 px-5 flex-1">
@@ -72,9 +73,9 @@ export default function ReviewCard() {
 
           {/* Slide 3 */}
           <div>
-            <div className="max-w-lg mx-auto bg-white rounded-[15px] flex flex-col sm:flex-row overflow-hidden shadow-md">
+            <div className="mx-auto bg-white rounded-[15px] flex flex-col sm:flex-row overflow-hidden shadow-md">
               <div
-                className="w-full sm:w-[150px] min-h-[180px] sm:h-auto bg-cover bg-no-repeat bg-center"
+                className="w-full sm:w-[140px] min-h-[180px] sm:h-auto bg-cover bg-no-repeat bg-center"
                 style={{ backgroundImage: `url('/assets/images/review-card-img.svg')` }}
               ></div>
               <div className="py-4 px-5 flex-1">
@@ -91,16 +92,16 @@ export default function ReviewCard() {
 
           {/* Slide 4 */}
           <div>
-            <div className="max-w-lg mx-auto bg-white rounded-[15px] flex flex-col sm:flex-row overflow-hidden shadow-md">
+            <div className="mx-auto bg-white rounded-[15px] flex flex-col sm:flex-row overflow-hidden shadow-md">
               <div
-                className="w-full sm:w-[150px] min-h-[180px] sm:h-auto bg-cover bg-no-repeat bg-center"
+                className="w-full sm:w-[140px] min-h-[180px] sm:h-auto bg-cover bg-no-repeat bg-center"
                 style={{ backgroundImage: `url('/assets/images/review-card-img.svg')` }}
               ></div>
               <div className="py-4 px-5 flex-1">
                 <p className="text-[#222A4A] text-[13px] leading-[21px] mb-3">
                   Tried the Veg Meals and it was beyond expectations—fresh, tasty, and satisfying!
                 </p>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2" >
                   <Image src="/assets/images/google.svg" alt="Google logo" width={20} height={20} />
                   <span className="text-[#222A4A] text-[14px] font-semibold">Karthik S</span>
                 </div>
